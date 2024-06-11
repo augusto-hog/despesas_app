@@ -1,0 +1,31 @@
+import 'package:flutter/painting.dart';
+
+class AppTextStyles {
+  AppTextStyles._();
+
+  static const TextStyle bigText = TextStyle(
+    fontFamily: 'Lexend',
+    fontSize: 50.0,
+    fontWeight: FontWeight.w700,
+  );
+  static const TextStyle mediumText = TextStyle(
+    fontFamily: 'Lexend',
+    fontSize: 36.0,
+    fontWeight: FontWeight.w700,
+  );
+  static const TextStyle mediumText26 = TextStyle(
+    fontFamily: 'Lexend',
+    fontSize: 26.0,
+    fontWeight: FontWeight.w600,
+  );
+  static const TextStyle mediumText18 = TextStyle(
+    fontFamily: 'Lexend',
+    fontSize: 18.0,
+    fontWeight: FontWeight.w600,
+  );
+  static const TextStyle smallText = TextStyle(
+    fontFamily: 'Lexend',
+    fontSize: 14.0,
+    fontWeight: FontWeight.w500,
+  );
+}

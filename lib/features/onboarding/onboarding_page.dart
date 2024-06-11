@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:despesas_app/common/constants/app_colors.dart';
 import 'package:despesas_app/common/constants/app_text_styles.dart';
+import 'package:despesas_app/common/widgets/multi_text_button.dart';
 import 'package:despesas_app/common/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
 
@@ -26,31 +29,45 @@ class OnboardingPage extends StatelessWidget {
             ),
             Text(
               'Finanças em Ordem',
-              style: AppTextStyles.mediumText26
+              style: AppTextStyles.mediumText28
                   .copyWith(color: AppColors.greenlightTwo),
               textAlign: TextAlign.center,
             ),
             Text(
               'Vida mais Leve.',
-              style: AppTextStyles.mediumText26
+              style: AppTextStyles.mediumText28
                   .copyWith(color: AppColors.greenlightOne),
               textAlign: TextAlign.center,
             ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 32.0, vertical: 20.0),
+              padding: const EdgeInsets.only(
+                  left: 32.0, right: 20.0, top: 16.0, bottom: 4.0),
               child: PrimaryButton(
                 text: 'Começar',
                 onPressed: () {},
               ),
             ),
-            Text(
-              'Já tem uma conta? Faça login',
-              style: AppTextStyles.smallText.copyWith(color: AppColors.grey),
-              textAlign: TextAlign.center,
+            MultiTextButton(
+              onPressed: () {
+                log('Clicou em "Faça Login"');
+              },
+              children: [
+                Text(
+                  'Já tem uma conta? ',
+                  style: AppTextStyles.smallText.copyWith(
+                    color: AppColors.grey,
+                  ),
+                ),
+                Text(
+                  'Faça Login',
+                  style: AppTextStyles.smallText.copyWith(
+                    color: AppColors.greenlightTwo,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(
-              height: 60.0,
+              height: 24.0,
             ),
           ],
         ),

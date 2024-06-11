@@ -13,10 +13,10 @@ class AppTextStyles {
     fontSize: 36.0,
     fontWeight: FontWeight.w700,
   );
-  static const TextStyle mediumText26 = TextStyle(
+  static const TextStyle mediumText28 = TextStyle(
     fontFamily: 'Lexend',
-    fontSize: 26.0,
-    fontWeight: FontWeight.w600,
+    fontSize: 28.0,
+    fontWeight: FontWeight.w700,
   );
   static const TextStyle mediumText18 = TextStyle(
     fontFamily: 'Lexend',

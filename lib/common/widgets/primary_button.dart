@@ -34,7 +34,7 @@ class PrimaryButton extends StatelessWidget {
           borderRadius: _borderRadius,
           child: Align(
             child: Text(
-              'Começar',
+              text,
               style: AppTextStyles.mediumText18.copyWith(
                 color: AppColors.iceWhite,
               ),

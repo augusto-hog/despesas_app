@@ -1,4 +1,5 @@
-import 'package:despesas_app/features/onboarding/onboarding_page.dart';
+import 'package:despesas_app/features/cadastro/sign_up_page.dart';
+//import 'package:despesas_app/features/onboarding/onboarding_page.dart';
 //import 'package:despesas_app/features/splash/splash_page.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +9,8 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: OnboardingPage(),
+      //theme: defaultTheme,
+      home: SignUpPage(),
     );
   }
 }

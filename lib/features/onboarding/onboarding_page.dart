@@ -12,20 +12,17 @@ class OnboardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      backgroundColor: AppColors.iceWhite,
+      body: Align(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(
-              height: 50.0,
+              height: 48.0,
             ),
             Expanded(
-              flex: 2,
-              child: Container(
-                color: AppColors.iceWhite,
-                child: Image.asset('assets/images/man.png'),
-              ),
+              child: Image.asset('assets/images/man.png'),
             ),
             Text(
               'Finanças em Ordem',

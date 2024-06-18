@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:despesas_app/common/constants/app_colors.dart';
 import 'package:despesas_app/common/constants/app_text_styles.dart';
+import 'package:despesas_app/common/widgets/custom_text_form_field.dart';
 import 'package:despesas_app/common/widgets/multi_text_button.dart';
+import 'package:despesas_app/common/widgets/password_form_field.dart';
 import 'package:despesas_app/common/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
 
@@ -35,14 +37,24 @@ class SignUpPage extends StatelessWidget {
                   .contain, // Ajuste a forma como a imagem se adapta ao Container
             ),
           ),
-          Form(
+          const Form(
               child: Column(
             children: [
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: "Seu Nome",
-                  border: OutlineInputBorder(),
-                ),
+              CustomTextFormField(
+                labelText: "seu nome",
+                hintText: "Digite seu nome",
+              ),
+              CustomTextFormField(
+                labelText: "seu Email",
+                hintText: "email@email.com",
+              ),
+              PasswordFormField(
+                labelText: "escolha sua senha",
+                hintText: "********",
+              ),
+              PasswordFormField(
+                labelText: "Confirme sua senha",
+                hintText: "********",
               ),
             ],
           )),

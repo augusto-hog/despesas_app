@@ -41,10 +41,11 @@ class _PasswordFormFieldState extends State<PasswordFormField> {
   @override
   Widget build(BuildContext context) {
     return CustomTextFormField(
-      validator: widget.validator,
+        validator: widget.validator,
         obscureText: isHidden,
         controller: widget.controller,
         padding: widget.padding,
+        helperText: widget.helperText,
         hintText: widget.hintText,
         labelText: widget.labelText,
         suffixIcon: InkWell(

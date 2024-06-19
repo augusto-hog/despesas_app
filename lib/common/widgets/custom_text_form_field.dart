@@ -46,12 +46,31 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     ),
   );
 
+  String? _helperText;
+
+  @override
+  void initState() {
+    super.initState();
+    _helperText = widget.helperText;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: widget.padding ??
           const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       child: TextFormField(
+        onChanged: (value) {
+          if (value.length == 1) {
+            setState(() {
+              _helperText = null;
+            });
+          } else if (value.isEmpty) {
+            setState(() {
+              _helperText = widget.helperText;
+            });
+          }
+        },
         validator: widget.validator,
         style: AppTextStyles.inputText.copyWith(
           color: AppColors.greenTwo,
@@ -63,9 +82,13 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         textCapitalization:
             widget.textCapitalization ?? TextCapitalization.none,
         decoration: InputDecoration(
-          helperText: widget.helperText,
+          helperText: _helperText,
+          helperMaxLines: 3,
           suffixIcon: widget.suffixIcon,
           hintText: widget.hintText,
+          hintStyle: AppTextStyles.inputHintText.copyWith(
+            color: AppColors.greenOne,
+          ),
           floatingLabelBehavior: FloatingLabelBehavior.always,
           labelText: widget.labelText?.toUpperCase(),
           labelStyle: AppTextStyles.inputLabelText.copyWith(

@@ -75,6 +75,8 @@ class _SignUpPageState extends State<SignUpPage> {
                   PasswordFormField(
                     labelText: "escolha sua senha",
                     hintText: "********",
+                    helperText:
+                        "Mínimo de 8 caracteres, 1 letra maiuscula e números",
                     validator: (value) {
                       if (value != null && value.isEmpty) {
                         return 'Por favor, digite sua senha';

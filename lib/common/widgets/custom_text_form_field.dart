@@ -1,6 +1,7 @@
 import 'package:despesas_app/common/constants/app_colors.dart';
 import 'package:despesas_app/common/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextFormField extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
@@ -13,6 +14,10 @@ class CustomTextFormField extends StatefulWidget {
   final TextInputAction? textInputAction;
   final Widget? suffixIcon;
   final bool? obscureText;
+  final String? helperText;
+  final List<TextInputFormatter>? inputFormatters;
+  final String? Function(String?)? validator;
+
   const CustomTextFormField({
     super.key,
     this.padding,
@@ -25,6 +30,9 @@ class CustomTextFormField extends StatefulWidget {
     this.textInputAction,
     this.suffixIcon,
     this.obscureText = false,
+    this.helperText,
+    this.inputFormatters,
+    this.validator,
   });
 
   @override
@@ -34,7 +42,7 @@ class CustomTextFormField extends StatefulWidget {
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
   final defaultBorder = const OutlineInputBorder(
     borderSide: BorderSide(
-      color: AppColors.greenlightTwo,
+      color: AppColors.greenTwo,
     ),
   );
 
@@ -44,12 +52,18 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       padding: widget.padding ??
           const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       child: TextFormField(
+        validator: widget.validator,
+        style: AppTextStyles.inputText.copyWith(
+          color: AppColors.greenTwo,
+        ),
+        inputFormatters: widget.inputFormatters,
         obscureText: widget.obscureText ?? false,
         keyboardType: widget.keyboardType,
         controller: widget.controller,
         textCapitalization:
             widget.textCapitalization ?? TextCapitalization.none,
         decoration: InputDecoration(
+          helperText: widget.helperText,
           suffixIcon: widget.suffixIcon,
           hintText: widget.hintText,
           floatingLabelBehavior: FloatingLabelBehavior.always,

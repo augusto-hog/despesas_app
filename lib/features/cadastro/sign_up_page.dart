@@ -7,6 +7,7 @@ import 'package:despesas_app/common/widgets/custom_text_form_field.dart';
 import 'package:despesas_app/common/widgets/multi_text_button.dart';
 import 'package:despesas_app/common/widgets/password_form_field.dart';
 import 'package:despesas_app/common/widgets/primary_button.dart';
+import 'package:despesas_app/common/utils/validator.dart';
 import 'package:flutter/material.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -18,6 +19,7 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -55,44 +57,28 @@ class _SignUpPageState extends State<SignUpPage> {
                     inputFormatters: [
                       UpperCaseTextInputFormatter(),
                     ],
-                    validator: (value) {
-                      if (value != null && value.isEmpty) {
-                        return 'Por favor, digite seu nome';
-                      }
-                      return null;
-                    },
+                    validator: Validator.validateName,
                   ),
-                  CustomTextFormField(
+                  const CustomTextFormField(
                     labelText: "seu Email",
                     hintText: "email@email.com",
-                    validator: (value) {
-                      if (value != null && value.isEmpty) {
-                        return 'Por favor, digite seu email';
-                      }
-                      return null;
-                    },
+                    validator: Validator.validateEmail,
                   ),
                   PasswordFormField(
+                    controller: _passwordController,
                     labelText: "escolha sua senha",
                     hintText: "********",
                     helperText:
-                        "Mínimo de 8 caracteres, 1 letra maiuscula e números",
-                    validator: (value) {
-                      if (value != null && value.isEmpty) {
-                        return 'Por favor, digite sua senha';
-                      }
-                      return null;
-                    },
+                        "Mínimo de 8 caracteres, 1 letra maiuscula, 1 número e 1 simbolo",
+                    validator: Validator.validatePassword,
                   ),
                   PasswordFormField(
                     labelText: "Confirme sua senha",
                     hintText: "********",
-                    validator: (value) {
-                      if (value != null && value.isEmpty) {
-                        return 'Por favor, confirme sua senha';
-                      }
-                      return null;
-                    },
+                    validator: (value) => Validator.validateConfirmPassword(
+                      value,
+                      _passwordController.text,
+                    ),
                   ),
                 ],
               )),

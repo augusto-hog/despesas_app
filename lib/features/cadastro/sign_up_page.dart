@@ -8,6 +8,8 @@ import 'package:despesas_app/common/widgets/multi_text_button.dart';
 import 'package:despesas_app/common/widgets/password_form_field.dart';
 import 'package:despesas_app/common/widgets/primary_button.dart';
 import 'package:despesas_app/common/utils/validator.dart';
+import 'package:despesas_app/features/cadastro/sign_up_controller.dart';
+import 'package:despesas_app/features/cadastro/sign_up_state.dart';
 import 'package:flutter/material.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -20,6 +22,57 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
+  final _controller = SignUpController();
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      if (_controller.state is SignUpLoadingState) {
+        showDialog(
+          context: context,
+          barrierDismissible:
+              false, // Evita que o diálogo seja fechado manualmente
+          builder: (context) => const Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+
+      if (_controller.state is SignUpSuccessState) {
+        // Fecha o diálogo de loading, se estiver aberto
+        Navigator.of(context, rootNavigator: true).pop();
+
+        // Navega para a próxima página
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const Scaffold(
+              body: Center(
+                child: Text("Cadastro realizado com sucesso!"),
+              ),
+            ),
+          ),
+        );
+      }
+      if (_controller.state is SignUpErrorState) {
+        // Fecha o diálogo de loading, se estiver aberto
+        Navigator.of(context, rootNavigator: true).pop();
+
+        // Exibe uma mensagem de erro, por exemplo
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Erro ao realizar cadastro!"),
+          ),
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +144,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 final valid = _formKey.currentState != null &&
                     _formKey.currentState!.validate();
                 if (valid) {
-                  log('Continuar com o cadastro');
+                  _controller.doSignUp();
                 } else {
                   log('Formulário inválido');
                 }

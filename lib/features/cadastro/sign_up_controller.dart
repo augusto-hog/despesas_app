@@ -18,7 +18,13 @@ class SignUpController extends ChangeNotifier {
       // Simulação de uma requisição assíncrona com um pequeno atraso
       await Future.delayed(const Duration(seconds: 2));
 
-      throw Exception("Erro ao cadastrar usuário");
+      //throw Exception("Erro ao cadastrar usuário");
+
+      log("Usuário criado!");
+
+      _changeState(SignUpSuccessState());
+
+      return true;
     } catch (e) {
       log("Erro ao cadastrar usuário: $e");
       _changeState(SignUpErrorState());

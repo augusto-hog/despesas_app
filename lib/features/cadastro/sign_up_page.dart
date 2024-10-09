@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:despesas_app/common/constants/app_colors.dart';
 import 'package:despesas_app/common/constants/app_text_styles.dart';
 import 'package:despesas_app/common/utils/uppercase_text_formatter.dart';
+import 'package:despesas_app/common/widgets/custom_bottom_sheet.dart';
+import 'package:despesas_app/common/widgets/custom_circular_progress_indicator.dart';
 import 'package:despesas_app/common/widgets/custom_text_form_field.dart';
 import 'package:despesas_app/common/widgets/multi_text_button.dart';
 import 'package:despesas_app/common/widgets/password_form_field.dart';
@@ -37,11 +39,7 @@ class _SignUpPageState extends State<SignUpPage> {
       if (_controller.state is SignUpLoadingState) {
         showDialog(
           context: context,
-          barrierDismissible:
-              false, // Evita que o diálogo seja fechado manualmente
-          builder: (context) => const Center(
-            child: CircularProgressIndicator(),
-          ),
+          builder: (context) => const CustomCircularProgressIndicator(),
         );
       }
 
@@ -61,15 +59,7 @@ class _SignUpPageState extends State<SignUpPage> {
         );
       }
       if (_controller.state is SignUpErrorState) {
-        // Fecha o diálogo de loading, se estiver aberto
-        Navigator.of(context, rootNavigator: true).pop();
-
-        // Exibe uma mensagem de erro, por exemplo
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Erro ao realizar cadastro!"),
-          ),
-        );
+        customModalBottomSheet(context);
       }
     });
   }
@@ -175,3 +165,4 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 }
+

@@ -5,6 +5,7 @@ class AppColors {
 
   static const Color greenOne = Color(0xFF63B5AF);
   static const Color greenTwo = Color(0xFF438883);
+  static const Color greenThree = Color.fromARGB(255, 22, 92, 87);
   static const List<Color> greenGradient = [
     Color(0xFF63B5AF),
     Color(0xFF438883)

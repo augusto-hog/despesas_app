@@ -3,7 +3,11 @@ import 'package:despesas_app/common/constants/app_text_styles.dart';
 import 'package:despesas_app/common/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
 
-Future<void> customModalBottomSheet(BuildContext context){
+Future<void> customModalBottomSheet({
+  required BuildContext context,
+  required String content,    // Parâmetro para o texto de erro
+  required String buttonText, // Parâmetro para o texto do botão
+}) {
   return showModalBottomSheet<void>(
     context: context,
     shape: const RoundedRectangleBorder(
@@ -12,7 +16,7 @@ Future<void> customModalBottomSheet(BuildContext context){
         topRight: Radius.circular(38),
       ),
     ),
-    builder: (BuildContext context){
+    builder: (BuildContext context) {
       return Container(
         decoration: const BoxDecoration(
           color: AppColors.white,
@@ -21,35 +25,32 @@ Future<void> customModalBottomSheet(BuildContext context){
             topRight: Radius.circular(38),
           ),
         ),
-        height: 200,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                'Ops. Algo Deu Errado.',
-                style: AppTextStyles.mediumText20.copyWith(
-                  color: AppColors.greenThree,
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16), // Ajuste de padding
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // Ajusta o tamanho da coluna ao conteúdo
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              content, // Exibe o conteúdo da mensagem de erro
+              style: AppTextStyles.mediumText20.copyWith(
+                color: AppColors.greenThree,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16), // Espaçamento entre o texto e o botão
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Material(
+                color: Colors.transparent, // Faz o fundo do Material ser transparente
+                child: PrimaryButton(
+                  text: buttonText, // Usa o texto fornecido como label do botão
+                  onPressed: () => Navigator.pop(context), // Ação do botão
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 16,
-                  horizontal: 32,
-                ),
-                child: Material(
-                  color: Colors.transparent, // Faz o fundo do Material ser transparente
-                  child: PrimaryButton(
-                    text: 'Tentar Novamente',
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
       );
-    }
+    },
   );
 }

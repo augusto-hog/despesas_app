@@ -1,9 +1,14 @@
-import 'dart:developer';
 import 'package:despesas_app/features/cadastro/sign_up_state.dart';
+import 'package:despesas_app/services/auth_service.dart';
 import 'package:flutter/foundation.dart';
 
 class SignUpController extends ChangeNotifier {
+  final AuthService _service;
+
+  SignUpController(this._service);
+
   SignUpState _state = SignUpInitialState();
+
   SignUpState get state => _state;
 
   void _changeState(SignUpState newState) {
@@ -11,24 +16,23 @@ class SignUpController extends ChangeNotifier {
     notifyListeners(); // Notifica os listeners sobre a mudança de estado
   }
 
-  Future<bool> doSignUp() async {
+  Future<void> signUp({
+    required name,
+    required email,
+    required password,
+  }) async {
     _changeState(SignUpLoadingState());
 
     try {
-      // Simulação de uma requisição assíncrona com um pequeno atraso
-      await Future.delayed(const Duration(seconds: 2));
-
-      //throw Exception("Erro ao cadastrar usuário");
-
-      log("Usuário criado!");
+      await _service.signUp(
+        name: name,
+        email: email,
+        password: password,
+      );
 
       _changeState(SignUpSuccessState());
-
-      return true;
     } catch (e) {
-      log("Erro ao cadastrar usuário: $e");
-      _changeState(SignUpErrorState());
-      return false;
+      _changeState(SignUpErrorState(e.toString()));
     }
   }
 }

@@ -2,8 +2,10 @@ import 'dart:developer';
 
 import 'package:despesas_app/common/constants/app_colors.dart';
 import 'package:despesas_app/common/constants/app_text_styles.dart';
+import 'package:despesas_app/common/constants/routes.dart';
 import 'package:despesas_app/common/widgets/multi_text_button.dart';
 import 'package:despesas_app/common/widgets/primary_button.dart';
+import 'package:despesas_app/features/cadastro/sign_up_page.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingPage extends StatelessWidget {
@@ -41,7 +43,12 @@ class OnboardingPage extends StatelessWidget {
                   left: 32.0, right: 20.0, top: 16.0, bottom: 4.0),
               child: PrimaryButton(
                 text: 'Começar',
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    NamedRoute.cadastro,
+                  );
+                },
               ),
             ),
             MultiTextButton(

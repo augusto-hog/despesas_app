@@ -1,11 +1,9 @@
-import 'dart:developer';
 
 import 'package:despesas_app/common/constants/app_colors.dart';
 import 'package:despesas_app/common/constants/app_text_styles.dart';
 import 'package:despesas_app/common/constants/routes.dart';
 import 'package:despesas_app/common/widgets/multi_text_button.dart';
 import 'package:despesas_app/common/widgets/primary_button.dart';
-import 'package:despesas_app/features/cadastro/sign_up_page.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingPage extends StatelessWidget {
@@ -53,7 +51,10 @@ class OnboardingPage extends StatelessWidget {
             ),
             MultiTextButton(
               onPressed: () {
-                log('Clicou em "Faça Login"');
+                Navigator.pushNamed(
+                  context,
+                  NamedRoute.login,
+                );
               },
               children: [
                 Text(

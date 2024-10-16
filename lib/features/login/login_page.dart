@@ -11,7 +11,7 @@ import 'package:despesas_app/common/widgets/password_form_field.dart';
 import 'package:despesas_app/common/widgets/primary_button.dart';
 import 'package:despesas_app/common/utils/validator.dart';
 import 'package:despesas_app/features/login/login_controller.dart';
-import 'package:despesas_app/services/mock_auth_service.dart';
+import 'package:despesas_app/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:despesas_app/features/login/login_state.dart';
 
@@ -26,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _controller = LoginController(MockAuthService());
+  final _controller = locator.get<LoginController>(); 
 
   @override
   void dispose() {

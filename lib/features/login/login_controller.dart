@@ -1,5 +1,6 @@
 import 'package:despesas_app/features/login/login_state.dart';
 import 'package:despesas_app/services/auth_service.dart';
+import 'package:despesas_app/services/secure_storage.dart';
 import 'package:flutter/foundation.dart';
 
 
@@ -22,13 +23,24 @@ Future<void> login({
     required email,
     required password,
   }) async {
+    const secureStorage = SecureStorageService();
     _changeState(LoginStateLoading());
 
     try {
-      await _service.login(
+      final user = await _service.login(
         email: email,
         password: password,
       );
+
+      if(user.id != null) {
+        await secureStorage.write(
+          key: "CURRENT_USER",
+          value: user.toJson(),
+        );
+        _changeState(LoginStateSuccess());
+      } else {
+        throw Exception();
+      }
 
       _changeState(LoginStateSuccess());
     } catch (e) {

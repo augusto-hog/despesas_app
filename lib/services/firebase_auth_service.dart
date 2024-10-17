@@ -16,9 +16,9 @@ class FirebaseAuthService implements AuthService {
       );
       if (result.user != null) {
         return UserModel(
-          name: result.user!.displayName,
-          email: result.user!.email,
-          id: result.user!.uid,
+          name: _auth.currentUser?.displayName,
+          email: _auth.currentUser?.email,
+          id: _auth.currentUser?.uid,
         );
       } else {
         throw Exception('Erro ao criar usuário');
@@ -54,6 +54,15 @@ class FirebaseAuthService implements AuthService {
     } on FirebaseAuthException catch (e) {
       throw e.message ?? "null";
     } catch (e) {
+      rethrow;
+    }
+  }
+  
+  @override
+  Future<void> logout() async{
+    try{
+      await _auth.signOut();
+    } catch(e){
       rethrow;
     }
   }

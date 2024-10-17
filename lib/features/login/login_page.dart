@@ -35,43 +35,35 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _controller.addListener(() {
-      if (_controller.state is LoginStateLoading) {
-        showDialog(
-          context: context,
-          builder: (context) => const CustomCircularProgressIndicator(),
-        );
-      }
+@override
+void initState() {
+  super.initState();
+  
+  _controller.addListener(() {
+    if (_controller.state is LoginStateLoading) {
+      showDialog(
+        context: context,
+        barrierDismissible: false, // Impede que o usuário feche o diálogo tocando fora
+        builder: (context) => const CustomCircularProgressIndicator(),
+      );
+    }
 
-      if (_controller.state is LoginStateSuccess) {
-        // Fecha o diálogo de loading, se estiver aberto
-        Navigator.of(context, rootNavigator: true).pop();
+    if (_controller.state is LoginStateSuccess) {
+      Navigator.pop(context); // Fecha o diálogo de loading
+      Navigator.pushReplacementNamed(context, NamedRoute.home);
+    }
 
-        // Navega para a próxima página
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const Scaffold(
-              body: Center(
-                child: Text("Cadastro realizado com sucesso!"),
-              ),
-            ),
-          ),
-        );
-      }
-      if (_controller.state is LoginStateError) {
-        final error = _controller.state as LoginStateError;
-        customModalBottomSheet(
-          context: context,
-          content: error.message,
-          buttonText: "Tentar novamente", 
-        );
-
-      }
-    });
-  }
+    if (_controller.state is LoginStateError) {
+      Navigator.pop(context); // Fecha o diálogo de loading, se estiver aberto
+      final error = _controller.state as LoginStateError;
+      customModalBottomSheet(
+        context: context,
+        content: error.message,
+        buttonText: "Tentar novamente",
+      );
+    }
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -82,38 +74,36 @@ class _LoginPageState extends State<LoginPage> {
           Text(
             'Bem vindo de volta!',
             textAlign: TextAlign.center,
-            style:
-                AppTextStyles.mediumText28.copyWith(color: AppColors.greenTwo),
+            style: AppTextStyles.mediumText28.copyWith(color: AppColors.greenTwo),
           ),
           SizedBox(
-            width: 200, // Defina a largura desejada
-            height: 200, // Defina a altura desejada
+            width: 200,
+            height: 200,
             child: Image.asset(
               'assets/images/login.png',
-              fit: BoxFit
-                  .contain, // Ajuste a forma como a imagem se adapta ao Container
+              fit: BoxFit.contain,
             ),
           ),
           Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  CustomTextFormField(
-                    controller: _emailController,
-                    labelText: "Seu Email",
-                    hintText: "email@email.com",
-                    validator: Validator.validateEmail,
-                  ),
-                  PasswordFormField(
-                    controller: _passwordController,
-                    labelText: "Sua senha",
-                    hintText: "********",
-                    helperText:
-                        "Mínimo de 8 caracteres, 1 letra maiuscula, 1 número e 1 simbolo",
-                    validator: Validator.validatePassword,
-                  ),
-                ],
-              )),
+            key: _formKey,
+            child: Column(
+              children: [
+                CustomTextFormField(
+                  controller: _emailController,
+                  labelText: "Seu Email",
+                  hintText: "email@email.com",
+                  validator: Validator.validateEmail,
+                ),
+                PasswordFormField(
+                  controller: _passwordController,
+                  labelText: "Sua senha",
+                  hintText: "********",
+                  helperText: "Mínimo de 8 caracteres, 1 letra maiúscula, 1 número e 1 símbolo",
+                  validator: Validator.validatePassword,
+                ),
+              ],
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(
                 left: 32.0, right: 20.0, top: 16.0, bottom: 4.0),
@@ -135,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           MultiTextButton(
             onPressed: () {
-              Navigator.popAndPushNamed(context, NamedRoute.cadastro);
+              Navigator.popAndPushNamed(context, NamedRoute.home);
             },
             children: [
               Text(

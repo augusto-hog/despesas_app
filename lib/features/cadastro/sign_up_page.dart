@@ -51,17 +51,10 @@ class _SignUpPageState extends State<SignUpPage> {
 
       if (_controller.state is SignUpSuccessState) {
         // Fecha o diálogo de loading, se estiver aberto
-        Navigator.of(context, rootNavigator: true).pop();
-
-        // Navega para a próxima página
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const Scaffold(
-              body: Center(
-                child: Text("Cadastro realizado com sucesso!"),
-              ),
-            ),
-          ),
+        Navigator.pop(context);
+        Navigator.popAndPushNamed(
+          context,
+          NamedRoute.home,
         );
       }
       if (_controller.state is SignUpErrorState) {

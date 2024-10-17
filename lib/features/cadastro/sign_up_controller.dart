@@ -1,5 +1,6 @@
 import 'package:despesas_app/features/cadastro/sign_up_state.dart';
 import 'package:despesas_app/services/auth_service.dart';
+import 'package:despesas_app/services/secure_storage.dart';
 import 'package:flutter/foundation.dart';
 
 class SignUpController extends ChangeNotifier {
@@ -21,16 +22,24 @@ class SignUpController extends ChangeNotifier {
     required email,
     required password,
   }) async {
+    const secureStorage = SecureStorageService();
     _changeState(SignUpLoadingState());
 
     try {
-      await _service.signUp(
+      final user = await _service.signUp(
         name: name,
         email: email,
         password: password,
       );
-
-      _changeState(SignUpSuccessState());
+      if (user .id != null) {
+        secureStorage.write(
+          key: "CURRENT_USER",
+          value: user.toJson(),
+        );
+        _changeState(SignUpSuccessState());
+      } else {
+        throw Exception();
+      }
     } catch (e) {
       _changeState(SignUpErrorState(e.toString()));
     }

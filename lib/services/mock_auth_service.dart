@@ -48,5 +48,11 @@ class MockAuthService implements AuthService {
       throw 'Erro ao criar usuário. Tente novamente.';
     }
   }
+  
+  @override
+  Future<void> logout() {
+    // TODO: implement logout
+    throw UnimplementedError();
+  }
 
 }

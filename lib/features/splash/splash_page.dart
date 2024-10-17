@@ -1,9 +1,12 @@
-import 'dart:async';
+
 
 import 'package:despesas_app/common/constants/app_colors.dart';
 import 'package:despesas_app/common/constants/app_text_styles.dart';
 import 'package:despesas_app/common/constants/routes.dart';
 import 'package:despesas_app/common/widgets/custom_circular_progress_indicator.dart';
+import 'package:despesas_app/features/splash/splash_controller.dart';
+import 'package:despesas_app/features/splash/splash_state.dart';
+import 'package:despesas_app/locator.dart';
 import 'package:flutter/material.dart';
 
 class SplashPage extends StatefulWidget {
@@ -14,24 +17,24 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  final _splashController = locator.get<SplashController>();
   @override
   void initState() {
     super.initState();
-    init();
+    _splashController.isUserLogged();
+    _splashController.addListener(() {
+      if (_splashController.state is SplashStateSuccess) {
+        Navigator.pushReplacementNamed(context, NamedRoute.home);
+      } else if (_splashController.state is SplashStateError) {
+        Navigator.pushReplacementNamed(context, NamedRoute.initial);
+      }
+    });
   }
 
-  Timer init() {
-    return Timer(
-      const Duration(seconds: 2),
-      navigateOnboarding,
-    );
-  }
-
-  void navigateOnboarding() {
-    Navigator.pushReplacementNamed(
-      context,
-      NamedRoute.initial,
-    );
+  @override
+  void dispose() {
+    _splashController.dispose();
+    super.dispose();
   }
 
   @override
@@ -56,6 +59,7 @@ class _SplashPageState extends State<SplashPage> {
               'PoupeUp',
               style: AppTextStyles.bigText.copyWith(color: AppColors.white),
             ),
+            const SizedBox(height: 20), // Adiciona um espaço vertical de 20 pixels
             const CustomCircularProgressIndicator(),
           ],
         ),

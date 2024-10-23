@@ -79,13 +79,13 @@ class _SignUpPageState extends State<SignUpPage> {
             'Finanças em Ordem',
             textAlign: TextAlign.center,
             style:
-                AppTextStyles.mediumText28.copyWith(color: AppColors.greenTwo),
+                AppTextStyles.mediumText36.copyWith(color: AppColors.greenTwo),
           ),
           Text(
             'Vida mais Leve.',
             textAlign: TextAlign.center,
             style:
-                AppTextStyles.mediumText28.copyWith(color: AppColors.greenOne),
+                AppTextStyles.mediumText36.copyWith(color: AppColors.greenOne),
           ),
           SizedBox(
             width: 200, // Defina a largura desejada

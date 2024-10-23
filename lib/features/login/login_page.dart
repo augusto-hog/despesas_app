@@ -74,7 +74,7 @@ void initState() {
           Text(
             'Bem vindo de volta!',
             textAlign: TextAlign.center,
-            style: AppTextStyles.mediumText28.copyWith(color: AppColors.greenTwo),
+            style: AppTextStyles.mediumText36.copyWith(color: AppColors.greenTwo),
           ),
           SizedBox(
             width: 200,

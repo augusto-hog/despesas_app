@@ -1,10 +1,9 @@
-
-
 import 'package:despesas_app/common/constants/app_colors.dart';
 import 'package:despesas_app/common/constants/app_text_styles.dart';
 import 'package:despesas_app/common/constants/routes.dart';
 import 'package:despesas_app/common/widgets/custom_circular_progress_indicator.dart';
 import 'package:despesas_app/features/splash/splash_controller.dart';
+import 'package:despesas_app/common/extensions/sizes.dart';
 import 'package:despesas_app/features/splash/splash_state.dart';
 import 'package:despesas_app/locator.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +20,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => Sizes.init(context));
     _splashController.isUserLogged();
     _splashController.addListener(() {
       if (_splashController.state is SplashStateSuccess) {
@@ -57,9 +57,10 @@ class _SplashPageState extends State<SplashPage> {
           children: [
             Text(
               'PoupeUp',
-              style: AppTextStyles.bigText.copyWith(color: AppColors.white),
+              style: AppTextStyles.bigText50.copyWith(color: AppColors.white),
             ),
-            const SizedBox(height: 20), // Adiciona um espaço vertical de 20 pixels
+            const SizedBox(
+                height: 20), // Adiciona um espaço vertical de 20 pixels
             const CustomCircularProgressIndicator(),
           ],
         ),

@@ -26,13 +26,13 @@ class OnboardingPage extends StatelessWidget {
             ),
             Text(
               'Finanças em Ordem',
-              style: AppTextStyles.mediumText28
+              style: AppTextStyles.mediumText36
                   .copyWith(color: AppColors.greenTwo),
               textAlign: TextAlign.center,
             ),
             Text(
               'Vida mais Leve.',
-              style: AppTextStyles.mediumText28
+              style: AppTextStyles.mediumText36
                   .copyWith(color: AppColors.greenOne),
               textAlign: TextAlign.center,
             ),

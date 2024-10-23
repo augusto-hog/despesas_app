@@ -33,7 +33,7 @@ Future<void> customModalBottomSheet({
             Text(
               content, // Exibe o conteúdo da mensagem de erro
               style: AppTextStyles.mediumText20.copyWith(
-                color: AppColors.greenThree,
+                color: AppColors.green,
               ),
               textAlign: TextAlign.center,
             ),

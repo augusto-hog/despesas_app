@@ -50,9 +50,6 @@ class MockAuthService implements AuthService {
   }
   
   @override
-  Future<void> logout() {
-    // TODO: implement logout
-    throw UnimplementedError();
-  }
+  Future<void> logout() => throw UnimplementedError();
 
 }

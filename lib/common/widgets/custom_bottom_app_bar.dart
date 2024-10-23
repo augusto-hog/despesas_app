@@ -5,11 +5,10 @@ class CustomBottomAppBar extends StatefulWidget {
   final Color? selectedItemColor;
   final List<CustomBottomAppBarItem> children;
   const CustomBottomAppBar({
-    Key? key,
+    super.key,
     this.selectedItemColor,
     required this.children,
-  })  : assert(children.length == 5, 'children.length must be 5'),
-        super(key: key);
+  })  : assert(children.length == 5, 'children.length must be 5');
   @override
   State<CustomBottomAppBar> createState() => _CustomBottomAppBarState();
 }

@@ -9,15 +9,16 @@ import 'package:get_it/get_it.dart';
 final locator = GetIt.instance;
 
 void setup() {
-  locator.registerLazySingleton<AuthService>(
-    () => FirebaseAuthService());
+  locator.registerLazySingleton<AuthService>(() => FirebaseAuthService());
 
   locator.registerFactory<SplashController>(
-    () => SplashController(const SecureStorageService()));
+      () => SplashController(const SecureStorageService()));
 
   locator.registerFactory<LoginController>(
-    () => LoginController(locator.get<AuthService>()));
-    
-  locator.registerFactory<SignUpController>(
-    () => SignUpController(locator.get<AuthService>()));
+      () => LoginController(locator.get<AuthService>()));
+
+  locator.registerFactory<SignUpController>(() => SignUpController(
+        locator.get<AuthService>(),
+        const SecureStorageService(),
+      ));
 }

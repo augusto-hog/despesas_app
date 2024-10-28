@@ -2,6 +2,9 @@
 
 import 'dart:developer';
 
+import 'package:despesas_app/features/home/home_controller.dart';
+import 'package:despesas_app/features/home/home_state.dart';
+import 'package:despesas_app/locator.dart';
 import 'package:flutter/material.dart';
 
 import '../../common/constants/app_colors.dart';
@@ -19,6 +22,15 @@ class _HomePageState extends State<HomePage> {
   double get textScaleFactor =>
       MediaQuery.of(context).size.width < 360 ? 0.7 : 1.0;
   double get iconSize => MediaQuery.of(context).size.width < 360 ? 16.0 : 24.0;
+
+  final controller = locator.get<HomeController>();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.getAllTransactions();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -259,44 +271,69 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Expanded(
-                  child: ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    padding: EdgeInsets.zero,
-                    itemCount: 4,
-                    itemBuilder: (context, index) {
-                      final color =
-                          index % 2 == 0 ? AppColors.income : AppColors.outcome;
-                      final value =
-                          index % 2 == 0 ? "+ R\$ 100.00" : "- R\$ 100.00";
-                      return ListTile(
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 8.0),
-                        leading: Container(
-                          decoration: const BoxDecoration(
-                            color: AppColors.antiFlashWhite,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(8.0)),
-                          ),
-                          padding: const EdgeInsets.all(8.0),
-                          child: const Icon(
-                            Icons.monetization_on_outlined,
-                          ),
-                        ),
-                        title: const Text(
-                          'Mercado Pago',
-                          style: AppTextStyles.mediumText16w500,
-                        ),
-                        subtitle: const Text(
-                          '20/10/2020',
-                          style: AppTextStyles.smallText13,
-                        ),
-                        trailing: Text(
-                          value,
-                          style: AppTextStyles.mediumText18.apply(color: color),
-                        ),
-                      );
-                    },
-                  ),
+                  child: AnimatedBuilder(
+                      animation: controller,
+                      builder: (context, _) {
+                        if (controller.state is HomeStateLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.green,
+                            ),
+                          );
+                        }
+                        if (controller.state is HomeStateError) {
+                          return const Center(
+                            child: Text('Erro ao carregar transações'),
+                          );
+                        }
+                        if (controller.transactions.isEmpty) {
+                          return const Center(
+                            child: Text('Nenhuma transação encontrada'),
+                          );
+                        }
+                        return ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          padding: EdgeInsets.zero,
+                          itemCount: controller.transactions.length,
+                          itemBuilder: (context, index) {
+                            final item = controller.transactions[index];
+                            final color = item.value.isNegative
+                                ? AppColors.outcome
+                                : AppColors.income;
+                            final value = 
+                              "R\$ ${item.value.toStringAsFixed(2)}";
+                            return ListTile(
+                              contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              leading: Container(
+                                decoration: const BoxDecoration(
+                                  color: AppColors.antiFlashWhite,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8.0)),
+                                ),
+                                padding: const EdgeInsets.all(8.0),
+                                child: const Icon(
+                                  Icons.monetization_on_outlined,
+                                ),
+                              ),
+                              title: Text(
+                                item.title,
+                                style: AppTextStyles.mediumText16w500,
+                              ),
+                              subtitle: Text(
+                                DateTime.fromMillisecondsSinceEpoch(item.date)
+                                    .toString(),
+                                style: AppTextStyles.smallText13,
+                              ),
+                              trailing: Text(
+                                value,
+                                style: AppTextStyles.mediumText18
+                                    .apply(color: color),
+                              ),
+                            );
+                          },
+                        );
+                      }),
                 ),
               ],
             ),

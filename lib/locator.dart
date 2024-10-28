@@ -1,6 +1,8 @@
 import 'package:despesas_app/features/cadastro/sign_up_controller.dart';
+import 'package:despesas_app/features/home/home_controller.dart';
 import 'package:despesas_app/features/login/login_controller.dart';
 import 'package:despesas_app/features/splash/splash_controller.dart';
+import 'package:despesas_app/repositories/transaction_repository.dart';
 import 'package:despesas_app/services/auth_service.dart';
 import 'package:despesas_app/services/firebase_auth_service.dart';
 import 'package:despesas_app/services/secure_storage.dart';
@@ -21,4 +23,9 @@ void setup() {
         locator.get<AuthService>(),
         const SecureStorageService(),
       ));
-}
+
+  locator.registerFactory<TransactionRepository>(
+      () => TransactionRepositoryImpl());
+
+      locator.registerLazySingleton<HomeController>(() => HomeController(locator.get<TransactionRepository>()));
+  }

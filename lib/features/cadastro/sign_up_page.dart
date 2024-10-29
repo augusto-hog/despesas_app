@@ -138,19 +138,25 @@ class _SignUpPageState extends State<SignUpPage> {
                 left: 32.0, right: 20.0, top: 16.0, bottom: 4.0),
             child: PrimaryButton(
               text: 'Cadastre-se',
-              onPressed: () {
-                final valid = _formKey.currentState != null &&
-                    _formKey.currentState!.validate();
-                if (valid) {
-                  _controller.signUp(
+              onPressed: () async {
+              final valid = _formKey.currentState != null &&
+                  _formKey.currentState!.validate();
+              if (valid) {
+                try {
+                  await _controller.signUp(
                     name: _nameController.text,
                     email: _emailController.text,
                     password: _passwordController.text,
                   );
-                } else {
-                  log('Formulário inválido');
+                  log('Usuário cadastrado com sucesso');
+                  // Aqui você pode adicionar um redirecionamento ou mensagem de sucesso
+                } catch (e) {
+                  log('Erro ao cadastrar usuário: $e'); // Log do erro
                 }
-              },
+              } else {
+                log('Formulário inválido');
+              }
+            },
             ),
           ),
           MultiTextButton(

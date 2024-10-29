@@ -1,3 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:despesas_app/locator.dart';
+import 'package:despesas_app/services/auth_service.dart';
+import 'package:despesas_app/services/secure_storage.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -13,9 +18,23 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: Text("Profile"),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text("Profile"),
+            TextButton(
+                onPressed: () async {
+                  await locator.get<AuthService>().logout();
+                  await const SecureStorageService().deleteAll();
+                  if (mounted){
+                    Navigator.popUntil(context, ModalRoute.withName("/"));
+                  }
+                },
+                child: const Text("Sair"))
+          ],
+        ),
       ),
     );
   }

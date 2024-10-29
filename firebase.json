@@ -1,1 +1,35 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"poupeup-app","appId":"1:469696823296:android:0885090a167f7c38eb98e5","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"poupeup-app","configurations":{"android":"1:469696823296:android:0885090a167f7c38eb98e5","ios":"1:469696823296:ios:7605df2f73c19b0deb98e5"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "poupeup-app",
+          "appId": "1:469696823296:android:0885090a167f7c38eb98e5",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "poupeup-app",
+          "configurations": {
+            "android": "1:469696823296:android:0885090a167f7c38eb98e5",
+            "ios": "1:469696823296:ios:7605df2f73c19b0deb98e5"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ]
+}

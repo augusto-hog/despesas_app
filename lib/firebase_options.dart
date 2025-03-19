@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:469696823296:android:0885090a167f7c38eb98e5',
     messagingSenderId: '469696823296',
     projectId: 'poupeup-app',
-    storageBucket: 'poupeup-app.appspot.com',
+    storageBucket: 'poupeup-app.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -62,7 +62,7 @@ class DefaultFirebaseOptions {
     appId: '1:469696823296:ios:7605df2f73c19b0deb98e5',
     messagingSenderId: '469696823296',
     projectId: 'poupeup-app',
-    storageBucket: 'poupeup-app.appspot.com',
+    storageBucket: 'poupeup-app.firebasestorage.app',
     iosBundleId: 'dev.augusto.despesas.despesasApp',
   );
 

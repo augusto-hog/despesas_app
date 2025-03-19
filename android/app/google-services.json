@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "469696823296",
     "project_id": "poupeup-app",
-    "storage_bucket": "poupeup-app.appspot.com"
+    "storage_bucket": "poupeup-app.firebasestorage.app"
   },
   "client": [
     {

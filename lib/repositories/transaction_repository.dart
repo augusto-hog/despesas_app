@@ -1,4 +1,10 @@
+import 'dart:developer';
+
+import 'package:despesas_app/common/constants/queries/get_all_transactions.dart';
 import 'package:despesas_app/common/models/transaction_model.dart';
+import 'package:despesas_app/locator.dart';
+import 'package:despesas_app/services/graphql_service.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 abstract class TransactionRepository {
   Future<void> addTransaction();
@@ -6,6 +12,10 @@ abstract class TransactionRepository {
 }
 
 class TransactionRepositoryImpl implements TransactionRepository {
+  final client = locator.get<GraphQLService>().client;
+
+  TransactionRepositoryImpl(GraphQLService graphQLService);
+
   @override
   Future<void> addTransaction() {
     // TODO: implement addTransaction
@@ -14,25 +24,14 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
   @override
   Future<List<TransactionModel>> getAllTransactions() async {
-    await Future.delayed(const Duration(seconds: 2));
-    return [
-      TransactionModel(
-        title: 'Salário',
-        value: 1000.0,
-        date: DateTime.now().millisecondsSinceEpoch,
-      ),
-      TransactionModel(
-        title: 'Conta de Luz',
-        value: -100.0,
-        date: DateTime.now()
-            .subtract(const Duration(days: 7))
-            .millisecondsSinceEpoch,
-      ),
-      TransactionModel(
-        title: 'Conta de Água',
-        value: -50.0,
-        date: DateTime.now().millisecondsSinceEpoch,
-      ),
-    ];
+    try{
+      final response = 
+        await client.query(QueryOptions(document: gql(qGetAllTransactions)));
+
+        log(response.data.toString());
+        return [];
+    } catch(e) {
+      rethrow;
+    }
   }
 }

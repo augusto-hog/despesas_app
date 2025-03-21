@@ -1,5 +1,6 @@
 import 'package:despesas_app/common/models/user_model.dart';
 import 'package:despesas_app/services/auth_service.dart';
+import 'package:despesas_app/services/graphql_service.dart';
 import 'package:despesas_app/services/secure_storage.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -10,4 +11,6 @@ class MockUser extends Mock implements UserModel {}
 // Mock Services
 class MockFirebaseAuthService extends Mock implements AuthService {}
 
-class MockSecureStorageService extends Mock implements SecureStorageService {}
+class MockSecureStorageService extends Mock implements SecureStorage {}
+
+class MockGraphQLService extends Mock implements GraphQLService {}

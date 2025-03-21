@@ -27,8 +27,8 @@ class _ProfilePageState extends State<ProfilePage>
             TextButton(
                 onPressed: () async {
                   await locator.get<AuthService>().logout();
-                  await const SecureStorageService().deleteAll();
-                  if (mounted){
+                  await const SecureStorage().deleteAll();
+                  if (mounted) {
                     Navigator.popUntil(context, ModalRoute.withName("/"));
                   }
                 },

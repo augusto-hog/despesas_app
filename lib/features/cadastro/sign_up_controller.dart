@@ -1,13 +1,18 @@
 import 'package:despesas_app/features/cadastro/sign_up_state.dart';
 import 'package:despesas_app/services/auth_service.dart';
+import 'package:despesas_app/services/graphql_service.dart';
 import 'package:despesas_app/services/secure_storage.dart';
 import 'package:flutter/foundation.dart';
 
 class SignUpController extends ChangeNotifier {
-  final AuthService _service;
-  final SecureStorageService _secureStorageService;
+  final AuthService authService;
+  final SecureStorage secureStorage;
+  final GraphQLService graphQLService;
 
-  SignUpController(this._service, this._secureStorageService);
+  SignUpController(
+      {required this.authService,
+      required this.secureStorage,
+      required this.graphQLService});
 
   SignUpState _state = SignUpInitialState();
 
@@ -26,16 +31,18 @@ class SignUpController extends ChangeNotifier {
     _changeState(SignUpLoadingState());
 
     try {
-      final user = await _service.signUp(
+      final user = await authService.signUp(
         name: name,
         email: email,
         password: password,
       );
-      if (user .id != null) {
-        _secureStorageService.write(
+      if (user.id != null) {
+        await secureStorage.write(
           key: "CURRENT_USER",
           value: user.toJson(),
         );
+        await graphQLService.init();
+
         _changeState(SignUpSuccessState());
       } else {
         throw Exception();

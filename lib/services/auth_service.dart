@@ -13,4 +13,6 @@ abstract class AuthService {
   });
 
   Future<void> logout();
+
+  Future<String> get userToken;
 }

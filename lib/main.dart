@@ -12,7 +12,9 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  setup();
+  // Espera a configuração das dependências ser concluída antes de iniciar o app
+  await setup();
 
   runApp(const App());
 }
+

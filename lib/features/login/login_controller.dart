@@ -3,10 +3,8 @@ import 'package:despesas_app/services/auth_service.dart';
 import 'package:despesas_app/services/secure_storage.dart';
 import 'package:flutter/foundation.dart';
 
-
 class LoginController extends ChangeNotifier {
-
-final AuthService _service;
+  final AuthService _service;
 
   LoginState _state = LoginStateInitial();
 
@@ -14,16 +12,16 @@ final AuthService _service;
 
   LoginState get state => _state;
 
-void _changeState(LoginState newstate) {
+  void _changeState(LoginState newstate) {
     _state = newstate;
     notifyListeners();
-}
+  }
 
-Future<void> login({
+  Future<void> login({
     required email,
     required password,
   }) async {
-    const secureStorage = SecureStorageService();
+    const secureStorage = SecureStorage();
     _changeState(LoginStateLoading());
 
     try {
@@ -32,7 +30,7 @@ Future<void> login({
         password: password,
       );
 
-      if(user.id != null) {
+      if (user.id != null) {
         await secureStorage.write(
           key: "CURRENT_USER",
           value: user.toJson(),
@@ -47,5 +45,4 @@ Future<void> login({
       _changeState(LoginStateError(e.toString()));
     }
   }
-
 }

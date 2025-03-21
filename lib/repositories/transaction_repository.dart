@@ -28,8 +28,11 @@ class TransactionRepositoryImpl implements TransactionRepository {
       final response = 
         await client.query(QueryOptions(document: gql(qGetAllTransactions)));
 
-        log(response.data.toString());
-        return [];
+        final parsedData = List.from(response.data?['transaction'] ?? []);
+
+        final transactions = parsedData.map((e) => TransactionModel.fromMap(e)).toList();
+
+        return transactions;
     } catch(e) {
       rethrow;
     }

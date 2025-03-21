@@ -12,33 +12,30 @@ import 'package:get_it/get_it.dart';
 final locator = GetIt.instance;
 
 Future<void> setup() async {
-  // Registra AuthService
   locator.registerFactory<AuthService>(() => FirebaseAuthService());
 
-  // Registra SecureStorage
+  locator.registerLazySingleton<GraphQLService>(
+      () => GraphQLService(authService: locator.get<AuthService>()));
+
   locator.registerLazySingleton<SecureStorage>(() => const SecureStorage());
 
-  // Registra GraphQLService e espera a inicialização
-  final graphQLService = GraphQLService(authService: locator.get<AuthService>());
-  await graphQLService.init();  // Espera a inicialização do GraphQL
-  locator.registerLazySingleton<GraphQLService>(() => graphQLService);
-
-  // Registra os controladores, após GraphQLService ser inicializado
   locator.registerLazySingleton<HomeController>(
       () => HomeController(locator.get<TransactionRepository>()));
 
-  locator.registerFactory<SplashController>(
-      () => SplashController(locator.get<SecureStorage>()));
+  locator.registerFactory<SplashController>(() => SplashController(
+      secureStorage: locator.get<SecureStorage>(),
+      graphQLService: locator.get<GraphQLService>()));
 
-  locator.registerFactory<LoginController>(
-      () => LoginController(locator.get<AuthService>()));
+  locator.registerFactory<LoginController>(() => LoginController(
+      authService: locator.get<AuthService>(),
+      secureStorage: locator.get<SecureStorage>(),
+      graphQLService: locator.get<GraphQLService>()));
 
   locator.registerFactory<SignUpController>(() => SignUpController(
       authService: locator.get<AuthService>(),
       secureStorage: locator.get<SecureStorage>(),
       graphQLService: locator.get<GraphQLService>()));
 
-  // Registra TransactionRepository
   locator.registerFactory<TransactionRepository>(
       () => TransactionRepositoryImpl(locator.get<GraphQLService>()));
 }

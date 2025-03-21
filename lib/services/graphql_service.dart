@@ -12,8 +12,6 @@ class GraphQLService {
 
   Future<void> init() async {
 
-    await initHiveForFlutter();
-
     final token = await authService.userToken;
 
     final HttpLink httpLink = HttpLink(
@@ -28,7 +26,7 @@ class GraphQLService {
 
     client = GraphQLClient(
       link: link,
-      cache: GraphQLCache(store: HiveStore()),
+      cache: GraphQLCache(store: InMemoryStore()),
     );
   }
 }

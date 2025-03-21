@@ -1,14 +1,20 @@
 import 'package:despesas_app/features/login/login_state.dart';
 import 'package:despesas_app/services/auth_service.dart';
+import 'package:despesas_app/services/graphql_service.dart';
 import 'package:despesas_app/services/secure_storage.dart';
 import 'package:flutter/foundation.dart';
 
 class LoginController extends ChangeNotifier {
-  final AuthService _service;
+  final AuthService authService;
+  final SecureStorage secureStorage;
+  final GraphQLService graphQLService;
 
   LoginState _state = LoginStateInitial();
 
-  LoginController(this._service);
+  LoginController(
+      {required this.authService,
+      required this.secureStorage,
+      required this.graphQLService});
 
   LoginState get state => _state;
 
@@ -25,7 +31,7 @@ class LoginController extends ChangeNotifier {
     _changeState(LoginStateLoading());
 
     try {
-      final user = await _service.login(
+      final user = await authService.login(
         email: email,
         password: password,
       );
@@ -35,6 +41,9 @@ class LoginController extends ChangeNotifier {
           key: "CURRENT_USER",
           value: user.toJson(),
         );
+
+        await graphQLService.init();
+
         _changeState(LoginStateSuccess());
       } else {
         throw Exception();

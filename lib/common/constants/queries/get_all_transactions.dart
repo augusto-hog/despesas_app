@@ -1,6 +1,6 @@
 const String qGetAllTransactions = """
   query getAllTransactions {
-    transaction {
+    transaction(order_by: {date: desc}) {
       category
       created_at
       date

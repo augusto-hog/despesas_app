@@ -294,14 +294,14 @@ class _HomePageState extends State<HomePage> {
                         return ListView.builder(
                           physics: const BouncingScrollPhysics(),
                           padding: EdgeInsets.zero,
-                          itemCount: controller.transactions.length,
+                          itemCount: 4,
                           itemBuilder: (context, index) {
                             final item = controller.transactions[index];
                             final color = item.value.isNegative
                                 ? AppColors.outcome
                                 : AppColors.income;
-                            final value = 
-                              "R\$ ${item.value.toStringAsFixed(2)}";
+                            final value =
+                                "R\$ ${item.value.toStringAsFixed(2)}";
                             return ListTile(
                               contentPadding:
                                   const EdgeInsets.symmetric(horizontal: 8.0),
@@ -317,7 +317,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               title: Text(
-                                item.title,
+                                item.description,
                                 style: AppTextStyles.mediumText16w500,
                               ),
                               subtitle: Text(

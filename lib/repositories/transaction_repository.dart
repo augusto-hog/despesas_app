@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:despesas_app/common/constants/queries/get_all_transactions.dart';
 import 'package:despesas_app/common/models/transaction_model.dart';

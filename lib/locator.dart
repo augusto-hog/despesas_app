@@ -1,5 +1,6 @@
 import 'package:despesas_app/features/cadastro/sign_up_controller.dart';
 import 'package:despesas_app/features/home/home_controller.dart';
+import 'package:despesas_app/features/home/widgets/balance_card/balance_card_widget_controller.dart';
 import 'package:despesas_app/features/login/login_controller.dart';
 import 'package:despesas_app/features/splash/splash_controller.dart';
 import 'package:despesas_app/repositories/transaction_repository.dart';
@@ -21,6 +22,9 @@ Future<void> setup() async {
 
   locator.registerLazySingleton<HomeController>(
       () => HomeController(locator.get<TransactionRepository>()));
+
+  locator.registerLazySingleton<BalanceCardWidgetController>(
+      () => BalanceCardWidgetController(transactionRepository: locator.get<TransactionRepository>()));
 
   locator.registerFactory<SplashController>(() => SplashController(
       secureStorage: locator.get<SecureStorage>(),

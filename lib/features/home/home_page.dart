@@ -2,7 +2,8 @@ import 'package:despesas_app/common/widgets/app_header.dart';
 import 'package:despesas_app/features/home/home_controller.dart';
 import 'package:despesas_app/features/home/home_state.dart';
 import 'package:despesas_app/common/widgets/transaction_listview.dart';
-import 'package:despesas_app/features/home/widgets/balance_card_widget.dart';
+import 'package:despesas_app/features/home/widgets/balance_card/balance_card_widget.dart';
+import 'package:despesas_app/features/home/widgets/balance_card/balance_card_widget_controller.dart';
 import 'package:despesas_app/locator.dart';
 import 'package:flutter/material.dart';
 
@@ -23,11 +24,13 @@ class _HomePageState extends State<HomePage> {
   double get iconSize => MediaQuery.of(context).size.width < 360 ? 16.0 : 24.0;
 
   final controller = locator.get<HomeController>();
+  final balanceController = locator.get<BalanceCardWidgetController>();
 
   @override
   void initState() {
     super.initState();
     controller.getAllTransactions();
+    balanceController.getBalances();
   }
 
   @override
@@ -40,10 +43,8 @@ class _HomePageState extends State<HomePage> {
             left: 24.w,
             right: 24.w,
             top: 155.h,
-            child: const BalanceCard(
-              totalAmount: 584.23,
-              incomeAmount: 4400.0,
-              outcomeAmount: -2824.0,
+            child: BalanceCard(
+              controller: balanceController,
             ),
           ),
           Positioned(
@@ -92,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                         }
                         return TransactionListView(
                           transactionList: controller.transactions,
-                          itemCount: 3,
+                          itemCount: 5,
                         );
                       }),
                 ),

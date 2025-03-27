@@ -1,5 +1,7 @@
 
 import 'package:despesas_app/common/constants/queries/get_all_transactions.dart';
+import 'package:despesas_app/common/constants/queries/get_balances.dart';
+import 'package:despesas_app/common/models/balances_model.dart';
 import 'package:despesas_app/common/models/transaction_model.dart';
 import 'package:despesas_app/locator.dart';
 import 'package:despesas_app/services/graphql_service.dart';
@@ -8,6 +10,8 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 abstract class TransactionRepository {
   Future<void> addTransaction();
   Future<List<TransactionModel>> getAllTransactions();
+
+  Future<BalancesModel> getBalances();
 }
 
 class TransactionRepositoryImpl implements TransactionRepository {
@@ -33,6 +37,19 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
         return transactions;
     } catch(e) {
+      rethrow;
+    }
+  }
+  
+  @override
+  Future<BalancesModel> getBalances() async {
+    try {
+      final response = await client.query(QueryOptions(document: gql(qGetBalances)));
+
+      final balances = BalancesModel.fromMap(response.data ?? {});
+
+      return balances;
+    } catch (e) {
       rethrow;
     }
   }

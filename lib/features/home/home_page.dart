@@ -19,17 +19,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  double get textScaleFactor =>
-      MediaQuery.of(context).size.width < 360 ? 0.7 : 1.0;
+  double get textScaleFactor => MediaQuery.of(context).size.width < 360 ? 0.7 : 1.0;
   double get iconSize => MediaQuery.of(context).size.width < 360 ? 16.0 : 24.0;
 
-  final controller = locator.get<HomeController>();
+  final homeController = locator.get<HomeController>();
   final balanceController = locator.get<BalanceCardWidgetController>();
 
   @override
   void initState() {
     super.initState();
-    controller.getAllTransactions();
+    homeController.getAllTransactions();
     balanceController.getBalances();
   }
 
@@ -54,41 +53,46 @@ class _HomePageState extends State<HomePage> {
             bottom: 0,
             child: Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Histórico de Transações',
                         style: AppTextStyles.mediumText18,
                       ),
-                      Text(
-                        'Ver tudo',
-                        style: AppTextStyles.inputLabelText,
+                      GestureDetector(
+                        onTap: () {
+                          homeController.pageController.jumpToPage(2);
+                        },
+                        child: const Text(
+                          'Ver tudo',
+                          style: AppTextStyles.inputLabelText,
+                        ),
                       ),
                     ],
                   ),
                 ),
                 Expanded(
                   child: AnimatedBuilder(
-                      animation: controller,
+                      animation: homeController,
                       builder: (context, _) {
-                        if (controller.state is HomeStateLoading) {
+                        if (homeController.state is HomeStateLoading) {
                           return const Center(
                             child: CircularProgressIndicator(
                               color: AppColors.green,
                             ),
                           );
                         }
-                        if (controller.state is HomeStateError) {
+                        if (homeController.state is HomeStateError) {
                           return const Center(
                             child: Text('Erro ao carregar transações'),
                           );
                         }
-                        if (controller.state is HomeStateSuccess) {
+                        if (homeController.state is HomeStateSuccess) {
                           return TransactionListView(
-                            transactionList: controller.transactions,
+                            transactionList: homeController.transactions,
                             itemCount: 5,
                           );
                         }

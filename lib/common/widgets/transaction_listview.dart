@@ -58,9 +58,19 @@ class TransactionListView extends StatelessWidget {
             DateTime.fromMillisecondsSinceEpoch(item.date).toText,
             style: AppTextStyles.smallText13,
           ),
-          trailing: Text(
-            value,
-            style: AppTextStyles.mediumText18.apply(color: color),
+          trailing: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                value,
+                style: AppTextStyles.mediumText18.apply(color: color),
+              ),
+              Text(
+                item.status ? 'concluido' : 'pendente',
+                style: AppTextStyles.smallText13.apply(color: AppColors.lightGrey),
+              ),
+            ],
           ),
         );
       },

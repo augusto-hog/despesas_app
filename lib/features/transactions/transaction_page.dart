@@ -15,8 +15,6 @@ import '../../common/widgets/custom_circular_progress_indicator.dart';
 import '../../common/widgets/custom_text_form_field.dart';
 import '../../common/widgets/primary_button.dart';
 import '../../locator.dart';
-import '../../repositories/transaction_repository.dart';
-import '../../services/secure_storage.dart';
 import 'transaction_controller.dart';
 import 'transaction_state.dart';
 
@@ -32,16 +30,13 @@ class TransactionPage extends StatefulWidget {
 }
 
 class _TransactionPageState extends State<TransactionPage> with SingleTickerProviderStateMixin {
-  final _transactionController = TransactionController(
-    repository: locator.get<TransactionRepository>(),
-    storage: const SecureStorage(),
-  );
+  final _transactionController = locator.get<TransactionController>();
 
   final _formKey = GlobalKey<FormState>();
 
   final _incomes = ['Serviços', 'Investimento', 'Outros'];
   final _outcomes = ['Casa', 'Mercado', 'Outros'];
-  DateTime? _date;
+  DateTime? _newDate;
   bool value = false;
 
   final _descriptionController = TextEditingController();
@@ -61,13 +56,22 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
     return 0;
   }
 
+  String get _date {
+    if (widget.transaction?.date != null) {
+      return DateTime.fromMillisecondsSinceEpoch(widget.transaction!.date).toText;
+    } else {
+      return '';
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _amountController.updateValue(widget.transaction?.value ?? 0);
+    value = widget.transaction?.status ?? false;
     _descriptionController.text = widget.transaction?.description ?? '';
     _categoryController.text = widget.transaction?.category ?? '';
-    _date = DateTime.fromMillisecondsSinceEpoch(widget.transaction?.date ?? 0);
+    _newDate = DateTime.fromMillisecondsSinceEpoch(widget.transaction?.date ?? 0);
     _dateController.text = widget.transaction?.date != null ? DateTime.fromMillisecondsSinceEpoch(widget.transaction!.date).toText : '';
     _tabController = TabController(
       length: 2,
@@ -96,6 +100,7 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
     _descriptionController.dispose();
     _categoryController.dispose();
     _dateController.dispose();
+    _transactionController.dispose();
     super.dispose();
   }
 
@@ -260,22 +265,22 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                           return null;
                         },
                         onTap: () async {
-                          _date = await showDatePicker(
+                          _newDate = await showDatePicker(
                             context: context,
                             initialDate: DateTime.now(),
                             firstDate: DateTime(1970),
                             lastDate: DateTime(2030),
                           );
 
-                          _date = _date?.microsecondsSinceEpoch != 0
+                          _newDate = _newDate != null
                               ? DateTime.now().copyWith(
-                                  day: _date?.day,
-                                  month: _date?.month,
-                                  year: _date?.year,
+                                  day: _newDate?.day,
+                                  month: _newDate?.month,
+                                  year: _newDate?.year,
                                 )
                               : null;
 
-                          _dateController.text = _date != null ? _date!.toText : '';
+                          _dateController.text = _newDate != null ? _newDate!.toText : _date;
                         },
                       ),
                       const SizedBox(height: 16.0),
@@ -295,7 +300,7 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                                 category: _categoryController.text,
                                 description: _descriptionController.text,
                                 value: _tabController.index == 1 ? newValue * -1 : newValue,
-                                date: _date != null ? _date!.millisecondsSinceEpoch : DateTime.now().millisecondsSinceEpoch,
+                                date: _newDate != null ? _newDate!.millisecondsSinceEpoch : DateTime.now().millisecondsSinceEpoch,
                                 status: value,
                                 id: widget.transaction?.id,
                               );

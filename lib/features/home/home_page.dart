@@ -86,14 +86,14 @@ class _HomePageState extends State<HomePage> {
                             child: Text('Erro ao carregar transações'),
                           );
                         }
-                        if (controller.transactions.isEmpty) {
-                          return const Center(
-                            child: Text('Nenhuma transação encontrada'),
+                        if (controller.state is HomeStateSuccess) {
+                          return TransactionListView(
+                            transactionList: controller.transactions,
+                            itemCount: 5,
                           );
                         }
-                        return TransactionListView(
-                          transactionList: controller.transactions,
-                          itemCount: 5,
+                        return const Center(
+                          child: Text('Não existem transações cadastradas'),
                         );
                       }),
                 ),

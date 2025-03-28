@@ -1,12 +1,55 @@
+import 'package:despesas_app/common/constants/app_colors.dart';
+import 'package:despesas_app/common/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
-final defaultTheme = ThemeData(
-  inputDecorationTheme: const InputDecorationTheme(
-    focusedBorder: OutlineInputBorder(
+class CustomTheme {
+  CustomTheme._();
+
+  factory CustomTheme() {
+    return CustomTheme._();
+  }
+
+  ThemeData get defaultTheme {
+    const defaultBorder = OutlineInputBorder(
       borderSide: BorderSide(
-        color: Colors.red,
+        color: AppColors.greenOne,
       ),
-      borderRadius: BorderRadius.all(Radius.circular(8.0)),
-    ),
-  ),
-);
+    );
+    return ThemeData(
+      colorScheme: const ColorScheme.light(
+        primary: AppColors.darkGreen,
+      ),
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        foregroundColor: AppColors.iceWhite,
+        backgroundColor: AppColors.green,
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.darkGreen,
+        ),
+      ),
+      tabBarTheme: const TabBarTheme(
+        indicator: BoxDecoration(
+          border: Border(),
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        labelStyle: AppTextStyles.inputLabelText.copyWith(color: AppColors.grey),
+        hintStyle: AppTextStyles.inputHintText.copyWith(color: AppColors.green),
+        focusedBorder: defaultBorder,
+        enabledBorder: defaultBorder,
+        disabledBorder: defaultBorder,
+        errorBorder: defaultBorder.copyWith(
+          borderSide: const BorderSide(
+            color: AppColors.error,
+          ),
+        ),
+        focusedErrorBorder: defaultBorder.copyWith(
+          borderSide: const BorderSide(
+            color: AppColors.error,
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -7,9 +7,11 @@ import 'package:despesas_app/features/profile/profile_page.dart';
 import 'package:despesas_app/features/splash/splash_page.dart';
 import 'package:despesas_app/features/stats/stats_page.dart';
 import 'package:despesas_app/features/wallet/wallet_page.dart';
-//import 'package:despesas_app/features/onboarding/onboarding_page.dart';
-//import 'package:despesas_app/features/splash/splash_page.dart';
 import 'package:flutter/material.dart';
+import 'common/models/transaction_model.dart';
+import 'common/themes/default_theme.dart';
+import 'features/transactions/transaction_page.dart';
+
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -17,7 +19,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      //theme: defaultTheme,
+      theme: CustomTheme().defaultTheme,
       initialRoute: NamedRoute.splash,
       routes: {
         NamedRoute.initial: (context) => const OnboardingPage(),
@@ -28,6 +30,12 @@ class App extends StatelessWidget {
         NamedRoute.stats: (context) => const StatsPage(),
         NamedRoute.wallet: (context) => const WalletPage(),
         NamedRoute.profile: (context) => const ProfilePage(),
+        NamedRoute.transaction: (context) {
+           final args = ModalRoute.of(context)?.settings.arguments;
+           return TransactionPage(
+             transaction: args != null ? args as TransactionModel : null,
+           );
+         },
       },
     );
   }

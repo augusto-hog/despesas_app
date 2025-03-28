@@ -1,4 +1,7 @@
 import 'dart:developer';
+import 'package:despesas_app/features/home/home_controller.dart';
+import 'package:despesas_app/features/home/widgets/balance_card/balance_card_widget_controller.dart';
+import 'package:despesas_app/locator.dart';
 import 'package:flutter/material.dart';
 import '../../common/constants/app_colors.dart';
 import '../../common/widgets/custom_bottom_app_bar.dart';
@@ -24,6 +27,12 @@ class _HomePageViewState extends State<HomePageView> {
   }
 
   @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
@@ -37,9 +46,13 @@ class _HomePageViewState extends State<HomePageView> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.green,
-        onPressed: () {},
-        shape: const CircleBorder(),
+        onPressed: () async {
+          final result = await Navigator.pushNamed(context, '/transaction');
+          if (result != null) {
+            locator.get<HomeController>().getAllTransactions();
+            locator.get<BalanceCardWidgetController>().getBalances();
+          }
+        },
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

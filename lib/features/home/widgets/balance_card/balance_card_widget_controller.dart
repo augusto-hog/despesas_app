@@ -30,7 +30,6 @@ class BalanceCardWidgetController extends ChangeNotifier {
   Future<void> getBalances() async {
     _changeState(BalanceCardWidgetStateLoading());
     try {
-      await Future.delayed(const Duration(seconds: 2));
       _balances = await transactionRepository.getBalances();
       _changeState(BalanceCardWidgetStateSuccess());
     } catch (e) {

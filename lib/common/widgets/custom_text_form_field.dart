@@ -17,6 +17,8 @@ class CustomTextFormField extends StatefulWidget {
   final String? helperText;
   final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
+  final GestureTapCallback? onTap;
+  final bool readOnly;
 
   const CustomTextFormField({
     super.key,
@@ -33,6 +35,8 @@ class CustomTextFormField extends StatefulWidget {
     this.helperText,
     this.inputFormatters,
     this.validator,
+    this.onTap,
+    this.readOnly = false,
   });
 
   @override
@@ -57,9 +61,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: widget.padding ??
-          const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      padding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       child: TextFormField(
+        readOnly: widget.readOnly,
+        onTap: widget.onTap,
         onChanged: (value) {
           if (value.length == 1) {
             setState(() {
@@ -79,35 +84,15 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         obscureText: widget.obscureText ?? false,
         keyboardType: widget.keyboardType,
         controller: widget.controller,
-        textCapitalization:
-            widget.textCapitalization ?? TextCapitalization.none,
+        textCapitalization: widget.textCapitalization ?? TextCapitalization.none,
         decoration: InputDecoration(
           errorMaxLines: 3,
           helperText: _helperText,
           helperMaxLines: 3,
           suffixIcon: widget.suffixIcon,
           hintText: widget.hintText,
-          hintStyle: AppTextStyles.inputHintText.copyWith(
-            color: AppColors.greenOne,
-          ),
           floatingLabelBehavior: FloatingLabelBehavior.always,
           labelText: widget.labelText?.toUpperCase(),
-          labelStyle: AppTextStyles.inputLabelText.copyWith(
-            color: AppColors.grey,
-          ),
-          focusedBorder: defaultBorder,
-          errorBorder: defaultBorder.copyWith(
-            borderSide: const BorderSide(
-              color: Colors.red,
-            ),
-          ),
-          focusedErrorBorder: defaultBorder.copyWith(
-            borderSide: const BorderSide(
-              color: Colors.red,
-            ),
-          ),
-          enabledBorder: defaultBorder,
-          disabledBorder: defaultBorder,
         ),
       ),
     );

@@ -2,15 +2,22 @@ import 'package:intl/intl.dart';
 
 extension DateTimeFormatter on DateTime {
   String get toText {
-    if (isAfter(DateTime.now().subtract(const Duration(days: 1)))) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final tomorrow = today.add(const Duration(days: 1));
+    final selectedDate = DateTime(year, month, day); // Remove a hora da comparação
+
+    if (selectedDate.isAtSameMomentAs(today)) {
       return 'Hoje';
     }
-    if (isAfter(DateTime.now().subtract(const Duration(days: 2))) && isBefore(DateTime.now().subtract(const Duration(days: 1)))) {
+    if (selectedDate.isAtSameMomentAs(yesterday)) {
       return 'Ontem';
     }
-    if (isAtSameMomentAs(DateTime.now().add(const Duration(days: 1)).copyWith(hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0))) {
+    if (selectedDate.isAtSameMomentAs(tomorrow)) {
       return 'Amanhã';
     }
+
     return DateFormat("d 'de' MMMM 'de' yyyy", 'pt_BR').format(this);
   }
 }

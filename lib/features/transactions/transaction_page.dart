@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 
+import 'package:despesas_app/common/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 
 import '../../common/constants/app_colors.dart';
@@ -72,7 +73,8 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
     _descriptionController.text = widget.transaction?.description ?? '';
     _categoryController.text = widget.transaction?.category ?? '';
     _newDate = DateTime.fromMillisecondsSinceEpoch(widget.transaction?.date ?? 0);
-    _dateController.text = widget.transaction?.date != null ? DateTime.fromMillisecondsSinceEpoch(widget.transaction!.date).toText : '';
+    _dateController.text =
+        widget.transaction?.date != null ? DateTime.fromMillisecondsSinceEpoch(widget.transaction!.date).toText : '';
     _tabController = TabController(
       length: 2,
       vsync: this,
@@ -89,6 +91,14 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
       }
       if (_transactionController.state is TransactionStateSuccess) {
         Navigator.of(context).pop();
+      }
+      if (_transactionController.state is TransactionStateError) {
+        final error = _transactionController.state as TransactionStateError;
+        showCustomSnackBar(
+          context: context,
+          text: error.message,
+          type: SnackBarType.error,
+        );
       }
     });
   }
@@ -201,7 +211,9 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                                   );
                                 },
                                 child: Icon(
-                                  value ? Icons.thumb_up_alt_rounded : Icons.thumb_up_off_alt_rounded, // Alterna entre os ícones
+                                  value
+                                      ? Icons.thumb_up_alt_rounded
+                                      : Icons.thumb_up_off_alt_rounded, // Alterna entre os ícones
                                   key: ValueKey<bool>(value), // Necessário para o AnimatedSwitcher
                                 ),
                               ),
@@ -300,7 +312,9 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                                 category: _categoryController.text,
                                 description: _descriptionController.text,
                                 value: _tabController.index == 1 ? newValue * -1 : newValue,
-                                date: _newDate != null ? _newDate!.millisecondsSinceEpoch : DateTime.now().millisecondsSinceEpoch,
+                                date: _newDate != null
+                                    ? _newDate!.millisecondsSinceEpoch
+                                    : DateTime.now().millisecondsSinceEpoch,
                                 status: value,
                                 id: widget.transaction?.id,
                               );

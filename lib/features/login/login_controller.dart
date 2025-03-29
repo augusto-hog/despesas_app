@@ -7,11 +7,10 @@ import 'package:flutter/foundation.dart';
 class LoginController extends ChangeNotifier {
   LoginState _state = LoginStateInitial();
 
-  LoginController({required this.authService, required this.secureStorageService, required this.graphQLService});
+  LoginController({required this.authService, required this.secureStorageService});
 
   final AuthService authService;
   final SecureStorageService secureStorageService;
-  final GraphQLService graphQLService;
 
   LoginState get state => _state;
 
@@ -34,8 +33,6 @@ class LoginController extends ChangeNotifier {
 
       if (user.id != null) {
         await secureStorageService.write(key: "CURRENT_USER", value: user.toJson());
-
-        await graphQLService.init();
 
         _changeState(LoginStateSuccess());
       } else {

@@ -1,3 +1,4 @@
+import 'package:despesas_app/common/widgets/transaction_listview/transaction_listview_controller.dart';
 import 'package:despesas_app/features/cadastro/sign_up_controller.dart';
 import 'package:despesas_app/features/home/home_controller.dart';
 import 'package:despesas_app/features/home/widgets/balance_card/balance_card_widget_controller.dart';
@@ -48,4 +49,8 @@ void setupDependencies() {
       transactionRepository: locator.get<TransactionRepository>(),
     ),
   );
+
+  locator.registerFactory<TransactionListViewController>(() => TransactionListViewController(
+        transactionRepository: locator.get<TransactionRepository>(),
+      ));
 }

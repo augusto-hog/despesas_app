@@ -1,7 +1,7 @@
 import 'package:despesas_app/common/widgets/app_header.dart';
 import 'package:despesas_app/features/home/home_controller.dart';
 import 'package:despesas_app/features/home/home_state.dart';
-import 'package:despesas_app/common/widgets/transaction_listview.dart';
+import 'package:despesas_app/common/widgets/transaction_listview/transaction_listview.dart';
 import 'package:despesas_app/features/home/widgets/balance_card/balance_card_widget.dart';
 import 'package:despesas_app/features/home/widgets/balance_card/balance_card_widget_controller.dart';
 import 'package:despesas_app/locator.dart';
@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                         if (homeController.state is HomeStateSuccess && homeController.transactions.isNotEmpty) {
                           return TransactionListView(
                             transactionList: homeController.transactions,
-                            itemCount: 5,
+                            itemCount: homeController.transactions.length,
                           );
                         }
                         return const Center(

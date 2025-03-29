@@ -30,7 +30,7 @@ class TransactionPage extends StatefulWidget {
   State<TransactionPage> createState() => _TransactionPageState();
 }
 
-class _TransactionPageState extends State<TransactionPage> with SingleTickerProviderStateMixin {
+class _TransactionPageState extends State<TransactionPage> with SingleTickerProviderStateMixin, CustomSnackBar {
   final _transactionController = locator.get<TransactionController>();
 
   final _formKey = GlobalKey<FormState>();
@@ -303,18 +303,17 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                           onPressed: () async {
                             FocusScope.of(context).unfocus();
                             if (_formKey.currentState!.validate()) {
-                              final newValue = double.parse(_amountController.text
-                                      .replaceAll('R\$ ', '') // Remove o prefixo "R$ "
-                                      .replaceAll('.', '') // Remove separadores de milhar
-                                      .replaceAll(',', '.') // Substitui a vírgula decimal pelo ponto
-                                  );
+                              final newValue = double.parse(
+                                  _amountController.text.replaceAll('\$', '').replaceAll('.', '').replaceAll(',', '.'));
+
+                              final now = DateTime.now().millisecondsSinceEpoch;
+
                               final newTransaction = TransactionModel(
                                 category: _categoryController.text,
                                 description: _descriptionController.text,
                                 value: _tabController.index == 1 ? newValue * -1 : newValue,
-                                date: _newDate != null
-                                    ? _newDate!.millisecondsSinceEpoch
-                                    : DateTime.now().millisecondsSinceEpoch,
+                                date: _newDate != null ? _newDate!.millisecondsSinceEpoch : now,
+                                createdAt: widget.transaction?.createdAt ?? now,
                                 status: value,
                                 id: widget.transaction?.id,
                               );

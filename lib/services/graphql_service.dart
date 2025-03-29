@@ -29,10 +29,10 @@ class GraphQLService implements ApiService<GraphQLClient, QueryResult> {
       link: link,
       defaultPolicies: DefaultPolicies(
         mutate: Policies(
-          fetch: FetchPolicy.cacheFirst,
+          fetch: FetchPolicy.networkOnly,
         ),
         query: Policies(
-          fetch: FetchPolicy.cacheFirst,
+          fetch: FetchPolicy.networkOnly,
         ),
       ),
       cache: GraphQLCache(store: HiveStore()),
@@ -46,14 +46,16 @@ class GraphQLService implements ApiService<GraphQLClient, QueryResult> {
     Map<String, dynamic>? params,
   }) async {
     try {
-      return await client.mutate(
-        MutationOptions(
-          variables: params ?? {},
-          document: gql(path),
-        ),
+      final options = MutationOptions(
+        variables: params ?? {},
+        document: gql(path),
       );
-    } on ServerException {
-      throw Exception('No connection at this time. Try again later.');
+      final result = await client.mutate(options);
+      if (result.hasException) {
+        throw result.exception as Object;
+      }
+
+      return result;
     } catch (e) {
       rethrow;
     }
@@ -65,14 +67,24 @@ class GraphQLService implements ApiService<GraphQLClient, QueryResult> {
     Map<String, dynamic>? params,
   }) async {
     try {
-      return await client.query(
-        QueryOptions(
-          variables: params ?? {},
-          document: gql(path),
-        ),
+      final options = QueryOptions(
+        variables: params ?? {},
+        document: gql(path),
       );
-    } on ServerException {
-      throw Exception('No connection at this time. Try again later.');
+      final cacheResult = client.readQuery(
+        options.asRequest,
+      );
+      final result = await client.query(options);
+
+      if (result.data != null && !result.hasException) {
+        return result;
+      } else {
+        return QueryResult(
+          options: options,
+          source: QueryResultSource.cache,
+          data: cacheResult,
+        );
+      }
     } catch (e) {
       rethrow;
     }
@@ -84,13 +96,16 @@ class GraphQLService implements ApiService<GraphQLClient, QueryResult> {
     Map<String, dynamic>? params,
   }) async {
     try {
-      return await client.mutate(
-        MutationOptions(
-          variables: params ?? {},
-          document: gql(path),
-          onError: (error) => throw error as Object,
-        ),
+      final options = MutationOptions(
+        variables: params ?? {},
+        document: gql(path),
       );
+      final result = await client.mutate(options);
+      if (result.hasException) {
+        throw result.exception as Object;
+      }
+
+      return result;
     } on OperationException {
       throw Exception('No connection at this time. Try again later.');
     } catch (e) {
@@ -102,8 +117,29 @@ class GraphQLService implements ApiService<GraphQLClient, QueryResult> {
   Future<QueryResult> delete({
     required String path,
     Map<String, dynamic>? params,
-  }) {
-    // TODO: implement delete
-    throw UnimplementedError();
+  }) async {
+    try {
+      final options = MutationOptions(
+        document: gql(path),
+        variables: params ?? {},
+      );
+      final result = await client.mutate(options);
+
+      if (result.hasException) {
+        throw result.exception as Object;
+      }
+      return result;
+    } on OperationException catch (e) {
+      if (e.graphqlErrors.isNotEmpty) {
+        throw e.graphqlErrors.first;
+      }
+      if (e.linkException != null) {
+        throw e.linkException!;
+      }
+
+      rethrow;
+    } catch (e) {
+      rethrow;
+    }
   }
 }

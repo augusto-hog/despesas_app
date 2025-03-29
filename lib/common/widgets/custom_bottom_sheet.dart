@@ -1,56 +1,72 @@
-import 'package:despesas_app/common/constants/app_colors.dart';
-import 'package:despesas_app/common/constants/app_text_styles.dart';
-import 'package:despesas_app/common/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
 
-Future<void> customModalBottomSheet({
-  required BuildContext context,
-  required String content,    // Parâmetro para o texto de erro
-  required String buttonText, // Parâmetro para o texto do botão
-}) {
-  return showModalBottomSheet<void>(
-    context: context,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(38),
-        topRight: Radius.circular(38),
-      ),
-    ),
-    builder: (BuildContext context) {
-      return Container(
-        decoration: const BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(38),
-            topRight: Radius.circular(38),
-          ),
+import '../constants/app_colors.dart';
+import '../constants/app_text_styles.dart';
+import 'primary_button.dart';
+
+mixin CustomModalSheetMixin<T extends StatefulWidget> on State<T> {
+  Future<bool?> showCustomModalBottomSheet({
+    required BuildContext context,
+    required String content,
+    String? buttonText,
+    VoidCallback? onPressed,
+    List<Widget>? actions,
+  }) {
+    assert(buttonText != null || actions != null);
+
+    return showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(38.0),
+          topRight: Radius.circular(38.0),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16), // Ajuste de padding
-        child: Column(
-          mainAxisSize: MainAxisSize.min, // Ajusta o tamanho da coluna ao conteúdo
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              content, // Exibe o conteúdo da mensagem de erro
-              style: AppTextStyles.mediumText20.copyWith(
-                color: AppColors.green,
-              ),
-              textAlign: TextAlign.center,
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(38.0),
+              topRight: Radius.circular(38.0),
             ),
-            const SizedBox(height: 16), // Espaçamento entre o texto e o botão
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: Material(
-                color: Colors.transparent, // Faz o fundo do Material ser transparente
-                child: PrimaryButton(
-                  text: buttonText, // Usa o texto fornecido como label do botão
-                  onPressed: () => Navigator.pop(context), // Ação do botão
+          ),
+          height: 200,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16.0,
+                  horizontal: 32.0,
+                ),
+                child: Text(
+                  content,
+                  style: AppTextStyles.mediumText20.copyWith(
+                    color: AppColors.greenOne,
+                  ),
                 ),
               ),
-            )
-          ],
-        ),
-      );
-    },
-  );
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8.0,
+                  horizontal: 32.0,
+                ),
+                child: actions != null
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: actions,
+                      )
+                    : PrimaryButton(
+                        text: buttonText!,
+                        onPressed: onPressed ?? () => Navigator.pop(context),
+                      ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }

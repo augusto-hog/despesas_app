@@ -1,6 +1,5 @@
 import 'package:despesas_app/features/login/login_state.dart';
 import 'package:despesas_app/services/auth_service.dart';
-import 'package:despesas_app/services/graphql_service.dart';
 import 'package:despesas_app/services/secure_storage.dart';
 import 'package:flutter/foundation.dart';
 

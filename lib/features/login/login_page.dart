@@ -22,11 +22,11 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _controller = locator.get<LoginController>(); 
+  final _controller = locator.get<LoginController>();
 
   @override
   void dispose() {
@@ -35,35 +35,35 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-@override
-void initState() {
-  super.initState();
-  
-  _controller.addListener(() {
-    if (_controller.state is LoginStateLoading) {
-      showDialog(
-        context: context,
-        barrierDismissible: false, // Impede que o usuário feche o diálogo tocando fora
-        builder: (context) => const CustomCircularProgressIndicator(),
-      );
-    }
+  @override
+  void initState() {
+    super.initState();
 
-    if (_controller.state is LoginStateSuccess) {
-      Navigator.pop(context); // Fecha o diálogo de loading
-      Navigator.pushReplacementNamed(context, NamedRoute.home);
-    }
+    _controller.addListener(() {
+      if (_controller.state is LoginStateLoading) {
+        showDialog(
+          context: context,
+          barrierDismissible: false, // Impede que o usuário feche o diálogo tocando fora
+          builder: (context) => const CustomCircularProgressIndicator(),
+        );
+      }
 
-    if (_controller.state is LoginStateError) {
-      Navigator.pop(context); // Fecha o diálogo de loading, se estiver aberto
-      final error = _controller.state as LoginStateError;
-      customModalBottomSheet(
-        context: context,
-        content: error.message,
-        buttonText: "Tentar novamente",
-      );
-    }
-  });
-}
+      if (_controller.state is LoginStateSuccess) {
+        Navigator.pop(context); // Fecha o diálogo de loading
+        Navigator.pushReplacementNamed(context, NamedRoute.home);
+      }
+
+      if (_controller.state is LoginStateError) {
+        Navigator.pop(context); // Fecha o diálogo de loading, se estiver aberto
+        final error = _controller.state as LoginStateError;
+        showCustomModalBottomSheet(
+          context: context,
+          content: error.message,
+          buttonText: "Tentar novamente",
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,13 +105,11 @@ void initState() {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(
-                left: 32.0, right: 20.0, top: 16.0, bottom: 4.0),
+            padding: const EdgeInsets.only(left: 32.0, right: 20.0, top: 16.0, bottom: 4.0),
             child: PrimaryButton(
               text: 'Login',
               onPressed: () {
-                final valid = _formKey.currentState != null &&
-                    _formKey.currentState!.validate();
+                final valid = _formKey.currentState != null && _formKey.currentState!.validate();
                 if (valid) {
                   _controller.login(
                     email: _emailController.text,

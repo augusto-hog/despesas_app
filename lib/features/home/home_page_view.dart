@@ -1,3 +1,4 @@
+import 'package:despesas_app/features/wallet/wallet_controller.dart';
 import 'package:flutter/material.dart';
 
 import '../../common/constants/app_colors.dart';
@@ -19,7 +20,6 @@ class HomePageView extends StatefulWidget {
 
 class _HomePageViewState extends State<HomePageView> {
   final homeController = locator.get<HomeController>();
-  final balanceController = locator.get<BalanceCardWidgetController>();
 
   @override
   void initState() {
@@ -29,8 +29,9 @@ class _HomePageViewState extends State<HomePageView> {
 
   @override
   void dispose() {
-    homeController.dispose();
-    balanceController.dispose();
+    locator.resetLazySingleton<HomeController>();
+    locator.resetLazySingleton<BalanceCardWidgetController>();
+    locator.resetLazySingleton<WalletController>();
     super.dispose();
   }
 
@@ -51,8 +52,9 @@ class _HomePageViewState extends State<HomePageView> {
         onPressed: () async {
           final result = await Navigator.pushNamed(context, '/transaction');
           if (result != null) {
-            homeController.getAllTransactions();
-            balanceController.getBalances();
+            homeController.getLatestTransactions();
+            locator.get<BalanceCardWidgetController>().getBalances();
+            locator.get<WalletController>().getAllTransactions();
           }
         },
         child: const Icon(Icons.add),

@@ -1,12 +1,13 @@
-import 'package:despesas_app/common/constants/app_colors.dart';
-import 'package:despesas_app/common/constants/app_text_styles.dart';
-import 'package:despesas_app/common/constants/routes.dart';
-import 'package:despesas_app/common/widgets/custom_circular_progress_indicator.dart';
-import 'package:despesas_app/features/splash/splash_controller.dart';
-import 'package:despesas_app/common/extensions/sizes.dart';
-import 'package:despesas_app/features/splash/splash_state.dart';
-import 'package:despesas_app/locator.dart';
 import 'package:flutter/material.dart';
+
+import '../../common/constants/app_colors.dart';
+import '../../common/constants/app_text_styles.dart';
+import '../../common/constants/routes.dart';
+import '../../common/extensions/sizes.dart';
+import '../../common/widgets/custom_circular_progress_indicator.dart';
+import '../../locator.dart';
+import 'splash_controller.dart';
+import 'splash_state.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -17,16 +18,25 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   final _splashController = locator.get<SplashController>();
+
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) => Sizes.init(context));
+
     _splashController.isUserLogged();
     _splashController.addListener(() {
-      if (_splashController.state is SplashStateSuccess) {
-        Navigator.pushReplacementNamed(context, NamedRoute.home);
-      } else if (_splashController.state is SplashStateError) {
-        Navigator.pushReplacementNamed(context, NamedRoute.initial);
+      if (_splashController.state is AuthenticatedUser) {
+        Navigator.pushReplacementNamed(
+          context,
+          NamedRoute.home,
+        );
+      } else {
+        Navigator.pushReplacementNamed(
+          context,
+          NamedRoute.initial,
+        );
       }
     });
   }
@@ -46,10 +56,7 @@ class _SplashPageState extends State<SplashPage> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              AppColors.greenOne,
-              AppColors.greenTwo,
-            ],
+            colors: AppColors.greenGradient,
           ),
         ),
         child: Column(
@@ -59,8 +66,6 @@ class _SplashPageState extends State<SplashPage> {
               'PoupeUp',
               style: AppTextStyles.bigText50.copyWith(color: AppColors.white),
             ),
-            const SizedBox(
-                height: 20), // Adiciona um espaço vertical de 20 pixels
             const CustomCircularProgressIndicator(),
           ],
         ),

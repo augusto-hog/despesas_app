@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    homeController.getAllTransactions();
+    homeController.getLatestTransactions();
     balanceController.getBalances();
   }
 
@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                             child: Text('Erro ao carregar transações'),
                           );
                         }
-                        if (homeController.state is HomeStateSuccess) {
+                        if (homeController.state is HomeStateSuccess && homeController.transactions.isNotEmpty) {
                           return TransactionListView(
                             transactionList: homeController.transactions,
                             itemCount: 5,

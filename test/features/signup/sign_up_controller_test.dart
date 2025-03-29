@@ -19,7 +19,7 @@ void main() {
 
     signUpController = SignUpController(
         authService: mockFirebaseAuthService,
-        secureStorage: mockSecureStorageService,
+        secureStorageService: mockSecureStorageService,
         graphQLService: mockGraphQLService);
 
     user = UserModel(

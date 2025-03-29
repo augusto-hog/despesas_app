@@ -5,10 +5,11 @@ import 'balance_card_widget_state.dart';
 import 'package:flutter/material.dart';
 
 class BalanceCardWidgetController extends ChangeNotifier {
-  final TransactionRepository transactionRepository;
   BalanceCardWidgetController( {
     required this.transactionRepository,
   });
+
+    final TransactionRepository transactionRepository;
 
   BalanceCardWidgetState _state = BalanceCardWidgetStateInitial();
 

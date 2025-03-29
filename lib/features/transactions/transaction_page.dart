@@ -88,7 +88,7 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
         );
       }
       if (_transactionController.state is TransactionStateSuccess) {
-        Navigator.pop(context);
+        Navigator.of(context).pop();
       }
     });
   }
@@ -311,14 +311,14 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                               if (widget.transaction != null) {
                                 await _transactionController.updateTransaction(newTransaction);
                                 if (mounted) {
-                                  Navigator.pop(context, true);
+                                  Navigator.of(context).pop(true);
                                 }
                               } else {
                                 await _transactionController.addTransaction(
                                   newTransaction,
                                 );
                                 if (mounted) {
-                                  Navigator.pop(context, true);
+                                  Navigator.of(context).pop(true);
                                 }
                               }
                             } else {

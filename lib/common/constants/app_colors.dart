@@ -17,6 +17,7 @@ class AppColors {
   static const Color iceWhite = Color(0xFFEEF8F7);
   static const Color darkWhite = Color.fromARGB(255, 207, 219, 218);
   static const Color antiFlashWhite = Color(0xFFF0F6F5);
+  static const Color blackGrey = Color(0xFF222222);
   static const Color darkGrey = Color(0xFF444444);
   static const Color grey = Color(0xFF666666);
   static const Color lightGrey = Color(0xFFAAAAAA);

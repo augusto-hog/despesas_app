@@ -11,6 +11,6 @@ class MockUser extends Mock implements UserModel {}
 // Mock Services
 class MockFirebaseAuthService extends Mock implements AuthService {}
 
-class MockSecureStorageService extends Mock implements SecureStorage {}
+class MockSecureStorageService extends Mock implements SecureStorageService {}
 
 class MockGraphQLService extends Mock implements GraphQLService {}

@@ -1,19 +1,21 @@
-import 'package:despesas_app/common/constants/app_colors.dart';
-import 'package:despesas_app/common/constants/app_text_styles.dart';
-import 'package:despesas_app/common/extensions/sizes.dart';
-import 'package:despesas_app/common/widgets/notification_widget.dart';
-import 'package:despesas_app/features/home/widgets/greetings_widget.dart';
 import 'package:flutter/material.dart';
+
+import '../../features/home/widgets/greetings_widget.dart';
+import '../constants/app_colors.dart';
+import '../constants/app_text_styles.dart';
+import '../extensions/sizes.dart';
+import 'notification_widget.dart';
 
 class AppHeader extends StatefulWidget {
   final String? title;
-  final Widget? child;
   final bool hasOptions;
+  final VoidCallback? onPressed;
+
   const AppHeader({
     super.key,
     this.title,
-    this.child,
     this.hasOptions = false,
+    this.onPressed,
   });
 
   @override
@@ -36,6 +38,7 @@ class _AppHeaderState extends State<AppHeader> {
             NotificationWidget(),
           ],
         );
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -69,7 +72,7 @@ class _AppHeaderState extends State<AppHeader> {
             left: 8.0.w,
             top: 56.h,
             child: GestureDetector(
-              onTap: () => Navigator.pop(context),
+              onTap: widget.onPressed ?? () => Navigator.pop(context),
               child: const Padding(
                 padding: EdgeInsets.all(16.0),
                 child: Icon(

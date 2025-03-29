@@ -5,14 +5,15 @@ import 'package:despesas_app/services/secure_storage.dart';
 import 'package:flutter/foundation.dart';
 
 class SignUpController extends ChangeNotifier {
-  final AuthService authService;
-  final SecureStorage secureStorage;
-  final GraphQLService graphQLService;
+  SignUpController({
+    required this.authService,
+    required this.secureStorageService,
+    required this.graphQLService,
+  });
 
-  SignUpController(
-      {required this.authService,
-      required this.secureStorage,
-      required this.graphQLService});
+  final AuthService authService;
+  final SecureStorageService secureStorageService;
+  final GraphQLService graphQLService;
 
   SignUpState _state = SignUpInitialState();
 
@@ -37,10 +38,11 @@ class SignUpController extends ChangeNotifier {
         password: password,
       );
       if (user.id != null) {
-        await secureStorage.write(
+        await secureStorageService.write(
           key: "CURRENT_USER",
           value: user.toJson(),
         );
+
         await graphQLService.init();
 
         _changeState(SignUpSuccessState());

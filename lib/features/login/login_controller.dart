@@ -5,16 +5,13 @@ import 'package:despesas_app/services/secure_storage.dart';
 import 'package:flutter/foundation.dart';
 
 class LoginController extends ChangeNotifier {
-  final AuthService authService;
-  final SecureStorage secureStorage;
-  final GraphQLService graphQLService;
-
   LoginState _state = LoginStateInitial();
 
-  LoginController(
-      {required this.authService,
-      required this.secureStorage,
-      required this.graphQLService});
+  LoginController({required this.authService, required this.secureStorageService, required this.graphQLService});
+
+  final AuthService authService;
+  final SecureStorageService secureStorageService;
+  final GraphQLService graphQLService;
 
   LoginState get state => _state;
 
@@ -27,7 +24,6 @@ class LoginController extends ChangeNotifier {
     required email,
     required password,
   }) async {
-    const secureStorage = SecureStorage();
     _changeState(LoginStateLoading());
 
     try {
@@ -37,10 +33,7 @@ class LoginController extends ChangeNotifier {
       );
 
       if (user.id != null) {
-        await secureStorage.write(
-          key: "CURRENT_USER",
-          value: user.toJson(),
-        );
+        await secureStorageService.write(key: "CURRENT_USER", value: user.toJson());
 
         await graphQLService.init();
 

@@ -1,15 +1,15 @@
+import 'package:flutter/foundation.dart';
 
-import 'package:despesas_app/common/models/balances_model.dart';
-import 'package:despesas_app/repositories/transaction_repository.dart';
+import '../../../../common/models/balances_model.dart';
+import '../../../../repositories/transaction_repository.dart';
 import 'balance_card_widget_state.dart';
-import 'package:flutter/material.dart';
 
 class BalanceCardWidgetController extends ChangeNotifier {
-  BalanceCardWidgetController( {
+  BalanceCardWidgetController({
     required this.transactionRepository,
   });
 
-    final TransactionRepository transactionRepository;
+  final TransactionRepository transactionRepository;
 
   BalanceCardWidgetState _state = BalanceCardWidgetStateInitial();
 
@@ -20,7 +20,6 @@ class BalanceCardWidgetController extends ChangeNotifier {
     totalOutcome: 0,
     totalBalance: 0,
   );
-
   BalancesModel get balances => _balances;
 
   void _changeState(BalanceCardWidgetState newState) {
@@ -30,11 +29,16 @@ class BalanceCardWidgetController extends ChangeNotifier {
 
   Future<void> getBalances() async {
     _changeState(BalanceCardWidgetStateLoading());
-    try {
-      _balances = await transactionRepository.getBalances();
-      _changeState(BalanceCardWidgetStateSuccess());
-    } catch (e) {
-      _changeState(BalanceCardWidgetStateError());
-    }
+
+    final result = await transactionRepository.getBalances();
+
+    result.fold(
+      (error) => _changeState(BalanceCardWidgetStateError()),
+      (data) {
+        _balances = data;
+
+        _changeState(BalanceCardWidgetStateSuccess());
+      },
+    );
   }
 }

@@ -28,28 +28,29 @@ class _SignUpPageState extends State<SignUpPage> with CustomModalSheetMixin {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _controller = locator.get<SignUpController>();
+  final _signUpController = locator.get<SignUpController>();
 
   @override
   void dispose() {
     _emailController.dispose();
     _nameController.dispose();
     _passwordController.dispose();
+    _signUpController.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(() {
-      if (_controller.state is SignUpLoadingState) {
+    _signUpController.addListener(() {
+      if (_signUpController.state is SignUpLoadingState) {
         showDialog(
           context: context,
           builder: (context) => const CustomCircularProgressIndicator(),
         );
       }
 
-      if (_controller.state is SignUpSuccessState) {
+      if (_signUpController.state is SignUpSuccessState) {
         // Fecha o diálogo de loading, se estiver aberto
         Navigator.pop(context);
         Navigator.popAndPushNamed(
@@ -57,8 +58,8 @@ class _SignUpPageState extends State<SignUpPage> with CustomModalSheetMixin {
           NamedRoute.home,
         );
       }
-      if (_controller.state is SignUpErrorState) {
-        final error = _controller.state as SignUpErrorState;
+      if (_signUpController.state is SignUpErrorState) {
+        final error = _signUpController.state as SignUpErrorState;
         showCustomModalBottomSheet(
              context: context,
           content: error.message,
@@ -143,7 +144,7 @@ class _SignUpPageState extends State<SignUpPage> with CustomModalSheetMixin {
                   _formKey.currentState!.validate();
               if (valid) {
                 try {
-                  await _controller.signUp(
+                  await _signUpController.signUp(
                     name: _nameController.text,
                     email: _emailController.text,
                     password: _passwordController.text,

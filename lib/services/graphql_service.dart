@@ -1,4 +1,5 @@
 import 'package:despesas_app/services/auth_service.dart';
+import '../data/exceptions.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'api_service.dart';
 
@@ -20,7 +21,11 @@ class GraphQLService implements ApiService<GraphQLClient, QueryResult> {
     );
 
     final AuthLink authLink = AuthLink(
-      getToken: () async => 'Bearer ${await authService.userToken}',
+      getToken: () async {
+        final result = await authService.userToken();
+
+        return 'Bearer ${result.data}';
+      },
     );
 
     final Link link = authLink.concat(httpLink);
@@ -37,24 +42,25 @@ class GraphQLService implements ApiService<GraphQLClient, QueryResult> {
       ),
       cache: GraphQLCache(store: HiveStore()),
     );
+
     return this;
   }
 
   @override
   Future<QueryResult> create({
     required String path,
-    Map<String, dynamic>? params,
+    Map<String, dynamic> params = const {},
   }) async {
     try {
       final options = MutationOptions(
-        variables: params ?? {},
+        variables: params,
         document: gql(path),
       );
+
       final result = await client.mutate(options);
       if (result.hasException) {
-        throw result.exception as Object;
+        throw result.exception!;
       }
-
       return result;
     } catch (e) {
       rethrow;
@@ -64,17 +70,20 @@ class GraphQLService implements ApiService<GraphQLClient, QueryResult> {
   @override
   Future<QueryResult> read({
     required String path,
-    Map<String, dynamic>? params,
+    Map<String, dynamic> params = const {},
   }) async {
     try {
       final options = QueryOptions(
-        variables: params ?? {},
+        variables: params,
         document: gql(path),
       );
-      final cacheResult = client.readQuery(
-        options.asRequest,
-      );
+
+      final cacheResult = client.readQuery(options.asRequest);
       final result = await client.query(options);
+
+      if (result.hasException && _containsInvalidResult(result)) {
+        throw const AuthException(code: 'session-expired');
+      }
 
       if (result.data != null && !result.hasException) {
         return result;
@@ -93,21 +102,21 @@ class GraphQLService implements ApiService<GraphQLClient, QueryResult> {
   @override
   Future<QueryResult> update({
     required String path,
-    Map<String, dynamic>? params,
+    Map<String, dynamic> params = const {},
   }) async {
     try {
       final options = MutationOptions(
-        variables: params ?? {},
+        variables: params,
         document: gql(path),
       );
+
       final result = await client.mutate(options);
+
       if (result.hasException) {
-        throw result.exception as Object;
+        throw result.exception!;
       }
 
       return result;
-    } on OperationException {
-      throw Exception('No connection at this time. Try again later.');
     } catch (e) {
       rethrow;
     }
@@ -116,30 +125,34 @@ class GraphQLService implements ApiService<GraphQLClient, QueryResult> {
   @override
   Future<QueryResult> delete({
     required String path,
-    Map<String, dynamic>? params,
+    Map<String, dynamic> params = const {},
   }) async {
     try {
       final options = MutationOptions(
         document: gql(path),
-        variables: params ?? {},
+        variables: params,
       );
+
       final result = await client.mutate(options);
 
       if (result.hasException) {
-        throw result.exception as Object;
-      }
-      return result;
-    } on OperationException catch (e) {
-      if (e.graphqlErrors.isNotEmpty) {
-        throw e.graphqlErrors.first;
-      }
-      if (e.linkException != null) {
-        throw e.linkException!;
+        throw result.exception!;
       }
 
-      rethrow;
+      return result;
     } catch (e) {
       rethrow;
     }
   }
+}
+
+bool _containsInvalidResult(QueryResult result) {
+  final List<GraphQLError> graphqlErrors = result.exception!.graphqlErrors;
+
+  if (graphqlErrors.isNotEmpty) {
+    final Map<String, dynamic>? errorExtensions = graphqlErrors.first.extensions;
+
+    return errorExtensions != null && ['invalid-jwt', 'invalid-headers'].any(errorExtensions.containsValue);
+  }
+  return false;
 }

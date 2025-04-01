@@ -65,6 +65,9 @@ class AuthException extends Failure {
   @override
   String get message {
     switch (code) {
+      case 'session-expired':
+      case 'invalid-jwt':
+      case 'invalid-headers':
       case 'user-not-authenticated':
         return 'Sua sessão expirou. Por favor, faça login novamente.';
       case 'email-already-exists':
@@ -74,6 +77,8 @@ class AuthException extends Failure {
         return 'E-mail ou senha incorretos. Verifique suas informações ou crie uma nova conta.';
       case 'network-request-failed':
         return 'Não foi possível conectar-se ao servidor remoto. Verifique sua conexão e tente novamente.';
+      case 'too-many-requests':
+        return 'Muitas tentativas de login. Por favor, tente novamente mais tarde.';
       case 'internal':
         return 'Não foi possível criar sua conta neste momento. Verifique suas informações e tente novamente.';
       default:

@@ -26,7 +26,7 @@ class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _controller = locator.get<LoginController>();
+  final _signInController = locator.get<LoginController>();
 
   @override
   void dispose() {
@@ -39,8 +39,8 @@ class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
   void initState() {
     super.initState();
 
-    _controller.addListener(() {
-      if (_controller.state is LoginStateLoading) {
+    _signInController.addListener(() {
+      if (_signInController.state is LoginStateLoading) {
         showDialog(
           context: context,
           barrierDismissible: false, // Impede que o usuário feche o diálogo tocando fora
@@ -48,14 +48,14 @@ class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
         );
       }
 
-      if (_controller.state is LoginStateSuccess) {
+      if (_signInController.state is LoginStateSuccess) {
         Navigator.pop(context); // Fecha o diálogo de loading
         Navigator.pushReplacementNamed(context, NamedRoute.home);
       }
 
-      if (_controller.state is LoginStateError) {
+      if (_signInController.state is LoginStateError) {
         Navigator.pop(context); // Fecha o diálogo de loading, se estiver aberto
-        final error = _controller.state as LoginStateError;
+        final error = _signInController.state as LoginStateError;
         showCustomModalBottomSheet(
           context: context,
           content: error.message,
@@ -111,7 +111,7 @@ class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
               onPressed: () {
                 final valid = _formKey.currentState != null && _formKey.currentState!.validate();
                 if (valid) {
-                  _controller.login(
+                  _signInController.login(
                     email: _emailController.text,
                     password: _passwordController.text,
                   );

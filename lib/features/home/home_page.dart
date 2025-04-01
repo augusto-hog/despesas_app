@@ -1,3 +1,5 @@
+import 'package:despesas_app/common/constants/routes.dart';
+import 'package:despesas_app/common/widgets/custom_bottom_sheet.dart';
 import 'package:despesas_app/common/widgets/app_header.dart';
 import 'package:despesas_app/features/home/home_controller.dart';
 import 'package:despesas_app/features/home/home_state.dart';
@@ -18,7 +20,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with CustomModalSheetMixin {
   double get textScaleFactor => MediaQuery.of(context).size.width < 360 ? 0.7 : 1.0;
   double get iconSize => MediaQuery.of(context).size.width < 360 ? 16.0 : 24.0;
 
@@ -30,6 +32,28 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     homeController.getLatestTransactions();
     balanceController.getBalances();
+
+    homeController.addListener(() {
+      if (homeController.state is HomeStateError) {
+        showCustomModalBottomSheet(
+          context: context,
+          content: (homeController.state as HomeStateError).message,
+          buttonText: 'Go to login',
+          isDismissible: false,
+          onPressed: () => Navigator.pushNamedAndRemoveUntil(
+            context,
+            NamedRoute.login,
+            ModalRoute.withName(NamedRoute.initial),
+          ),
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    locator.resetLazySingleton<BalanceCardWidgetController>();
+    super.dispose();
   }
 
   @override

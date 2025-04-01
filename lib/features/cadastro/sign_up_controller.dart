@@ -28,24 +28,22 @@ class SignUpController extends ChangeNotifier {
   }) async {
     _changeState(SignUpLoadingState());
 
-    try {
-      final user = await authService.signUp(
-        name: name,
-        email: email,
-        password: password,
-      );
-      if (user.id != null) {
+    final result = await authService.signUp(
+      name: name,
+      email: email,
+      password: password,
+    );
+
+    result.fold(
+      (error) => _changeState(SignUpErrorState(error.message)),
+      (data) async {
         await secureStorageService.write(
           key: "CURRENT_USER",
-          value: user.toJson(),
+          value: data.toJson(),
         );
 
         _changeState(SignUpSuccessState());
-      } else {
-        throw Exception();
-      }
-    } catch (e) {
-      _changeState(SignUpErrorState(e.toString()));
-    }
+      },
+    );
   }
 }

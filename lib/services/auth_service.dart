@@ -1,18 +1,20 @@
-import 'package:despesas_app/common/models/user_model.dart';
+import 'package:despesas_app/data/data_result.dart';
+
+import '../common/models/user_model.dart';
 
 abstract class AuthService {
-  Future<UserModel> signUp({
+  Future<DataResult<UserModel>> signUp({
     String? name,
     required String email,
-    required String password
+    required String password,
   });
-  
-  Future<UserModel> login({
+
+  Future<DataResult<UserModel>> signIn({
     required String email,
-    required String password
+    required String password,
   });
 
-  Future<void> logout();
+  Future<void> signOut();
 
-  Future<String> get userToken;
+  Future<DataResult<String>> userToken();
 }

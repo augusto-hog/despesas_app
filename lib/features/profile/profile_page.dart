@@ -25,7 +25,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
             const Text("Profile"),
             TextButton(
                 onPressed: () async {
-                  await locator.get<AuthService>().logout();
+                  await locator.get<AuthService>().signOut();
                   await const SecureStorageService().deleteAll();
                   if (mounted) {
                     Navigator.popUntil(context, ModalRoute.withName("/"));

@@ -24,23 +24,21 @@ class LoginController extends ChangeNotifier {
   }) async {
     _changeState(LoginStateLoading());
 
-    try {
-      final user = await authService.login(
-        email: email,
-        password: password,
-      );
+    final result = await authService.signIn(
+      email: email,
+      password: password,
+    );
 
-      if (user.id != null) {
-        await secureStorageService.write(key: "CURRENT_USER", value: user.toJson());
+    result.fold(
+      (error) => _changeState(LoginStateError(error.message)),
+      (data) async {
+        await secureStorageService.write(
+          key: "CURRENT_USER",
+          value: data.toJson(),
+        );
 
         _changeState(LoginStateSuccess());
-      } else {
-        throw Exception();
-      }
-
-      _changeState(LoginStateSuccess());
-    } catch (e) {
-      _changeState(LoginStateError(e.toString()));
-    }
+      },
+    );
   }
 }

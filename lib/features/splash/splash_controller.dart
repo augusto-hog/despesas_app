@@ -1,13 +1,16 @@
 import 'package:despesas_app/features/splash/splash_state.dart';
-import 'package:despesas_app/services/secure_storage.dart';
 import 'package:flutter/foundation.dart';
+
+import '../../services/services.dart';
 
 class SplashController extends ChangeNotifier {
   SplashController({
     required this.secureStorageService,
+    required this.syncService,
   });
 
   final SecureStorageService secureStorageService;
+  final SyncService syncService;
 
   SplashState _state = SplashStateInitial();
 
@@ -21,7 +24,15 @@ class SplashController extends ChangeNotifier {
   Future<void> isUserLogged() async {
     final result = await secureStorageService.readOne(key: "CURRENT_USER");
     if (result != null) {
-      _changeState(AuthenticatedUser());
+      _changeState(AuthenticatedUser(message: 'syncing data from server'));
+
+      await syncService.syncFromServer();
+
+      _changeState(AuthenticatedUser(message: 'syncing data to server'));
+
+      await syncService.syncToServer();
+
+      _changeState(AuthenticatedUser(isReady: true));
     } else {
       _changeState(UnauthenticatedUser());
     }

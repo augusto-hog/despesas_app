@@ -1,8 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:despesas_app/locator.dart';
-import 'package:despesas_app/services/auth_service.dart';
-import 'package:despesas_app/services/secure_storage.dart';
+import '../../services/services.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -27,6 +26,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                 onPressed: () async {
                   await locator.get<AuthService>().signOut();
                   await const SecureStorageService().deleteAll();
+                  await locator.get<DatabaseService>().deleteDB;
                   if (mounted) {
                     Navigator.popUntil(context, ModalRoute.withName("/"));
                   }

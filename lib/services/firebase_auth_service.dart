@@ -1,6 +1,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:despesas_app/data/data_result.dart';
-import 'package:despesas_app/data/exceptions.dart';
+import 'package:despesas_app/common/data/data_result.dart';
+import 'package:despesas_app/common/data/exceptions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../common/models/user_model.dart';

@@ -1,17 +1,13 @@
-import 'package:despesas_app/common/widgets/transaction_listview/transaction_listview_controller.dart';
-import 'package:despesas_app/features/cadastro/sign_up_controller.dart';
-import 'package:despesas_app/features/home/home_controller.dart';
-import 'package:despesas_app/features/home/widgets/balance_card/balance_card_widget_controller.dart';
-import 'package:despesas_app/features/login/login_controller.dart';
-import 'package:despesas_app/features/splash/splash_controller.dart';
-import 'package:despesas_app/features/wallet/wallet_controller.dart';
-import 'package:despesas_app/repositories/transaction_repository.dart';
-import 'features/transactions/transaction_controller.dart';
-import 'package:despesas_app/services/auth_service.dart';
-import 'package:despesas_app/services/firebase_auth_service.dart';
-import 'package:despesas_app/services/graphql_service.dart';
-import 'package:despesas_app/services/secure_storage.dart';
 import 'package:get_it/get_it.dart';
+
+import 'common/features/transaction/transaction.dart';
+import 'features/home/home_controller.dart';
+import 'features/login/login_controller.dart';
+import 'features/cadastro/sign_up_controller.dart';
+import 'features/splash/splash_controller.dart';
+import 'features/wallet/wallet_controller.dart';
+import 'repositories/repositories.dart';
+import 'services/services.dart';
 
 final locator = GetIt.instance;
 
@@ -24,33 +20,59 @@ void setupDependencies() {
     ).init(),
   );
 
-  locator.registerFactory<SplashController>(() => SplashController(secureStorageService: const SecureStorageService()));
+  locator.registerSingletonAsync<DatabaseService>(
+    () async => DatabaseService().init(),
+  );
 
-  locator.registerFactory<LoginController>(() =>
-      LoginController(authService: locator.get<AuthService>(), secureStorageService: const SecureStorageService()));
+  locator.registerFactory<SyncService>(
+    () => SyncService(
+      connectionService: const ConnectionService(),
+      databaseService: locator.get<DatabaseService>(),
+      graphQLService: locator.get<GraphQLService>(),
+      secureStorageService: const SecureStorageService(),
+    ),
+  );
+
+  locator.registerFactory<TransactionRepository>(
+    () => TransactionRepositoryImpl(
+      databaseService: locator.get<DatabaseService>(),
+      syncService: locator.get<SyncService>(),
+    ),
+  );
+
+  locator.registerFactory<SplashController>(
+    () => SplashController(
+      secureStorageService: const SecureStorageService(),
+      syncService: locator.get<SyncService>(),
+    ),
+  );
+
+  locator.registerFactory<LoginController>(
+    () => LoginController(
+      authService: locator.get<AuthService>(),
+      secureStorageService: const SecureStorageService(),
+      syncService: locator.get<SyncService>(),
+    ),
+  );
 
   locator.registerFactory<SignUpController>(() =>
       SignUpController(authService: locator.get<AuthService>(), secureStorageService: const SecureStorageService()));
 
-  locator.registerFactory<TransactionRepository>(
-    () => TransactionRepositoryImpl(
-      graphqlService: locator.get<GraphQLService>(),
-    ),
-  );
-
   locator.registerLazySingleton<HomeController>(
     () => HomeController(
       transactionRepository: locator.get<TransactionRepository>(),
+      syncService: SyncService(
+        connectionService: const ConnectionService(),
+        databaseService: locator.get<DatabaseService>(),
+        graphQLService: locator.get<GraphQLService>(),
+        secureStorageService: const SecureStorageService(),
+      ),
     ),
   );
 
-  locator.registerLazySingleton<BalanceCardWidgetController>(
-      () => BalanceCardWidgetController(transactionRepository: locator.get<TransactionRepository>()));
-
-  locator.registerFactory<TransactionController>(
-    () => TransactionController(
+  locator.registerLazySingleton<WalletController>(
+    () => WalletController(
       transactionRepository: locator.get<TransactionRepository>(),
-      storage: const SecureStorageService(),
     ),
   );
   locator.registerLazySingleton(
@@ -59,9 +81,10 @@ void setupDependencies() {
     ),
   );
 
-  locator.registerFactory<TransactionListViewController>(
-    () => TransactionListViewController(
+  locator.registerLazySingleton<TransactionController>(
+    () => TransactionController(
       transactionRepository: locator.get<TransactionRepository>(),
+      storage: const SecureStorageService(),
     ),
   );
 }

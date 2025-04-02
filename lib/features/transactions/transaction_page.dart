@@ -5,6 +5,8 @@ import 'dart:developer';
 import 'package:despesas_app/common/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 
+import '../../common/features/transaction/transaction.dart';
+
 import '../../common/constants/app_colors.dart';
 import '../../common/constants/app_text_styles.dart';
 import '../../common/extensions/date_formatter.dart';
@@ -16,8 +18,6 @@ import '../../common/widgets/custom_circular_progress_indicator.dart';
 import '../../common/widgets/custom_text_form_field.dart';
 import '../../common/widgets/primary_button.dart';
 import '../../locator.dart';
-import 'transaction_controller.dart';
-import 'transaction_state.dart';
 
 class TransactionPage extends StatefulWidget {
   final TransactionModel? transaction;
@@ -37,15 +37,14 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
 
   final _incomes = ['Serviços', 'Investimento', 'Outros'];
   final _outcomes = ['Casa', 'Mercado', 'Outros'];
+
   DateTime? _newDate;
   bool value = false;
 
   final _descriptionController = TextEditingController();
   final _categoryController = TextEditingController();
   final _dateController = TextEditingController();
-  final _amountController = MoneyMaskedTextController(
-    prefix: 'R\$ ',
-  );
+  final _amountController = MoneyMaskedTextController(prefix: 'R\$');
 
   late final TabController _tabController;
 
@@ -69,12 +68,15 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
   void initState() {
     super.initState();
     _amountController.updateValue(widget.transaction?.value ?? 0);
+
     value = widget.transaction?.status ?? false;
+
     _descriptionController.text = widget.transaction?.description ?? '';
     _categoryController.text = widget.transaction?.category ?? '';
     _newDate = DateTime.fromMillisecondsSinceEpoch(widget.transaction?.date ?? 0);
     _dateController.text =
         widget.transaction?.date != null ? DateTime.fromMillisecondsSinceEpoch(widget.transaction!.date).toText : '';
+
     _tabController = TabController(
       length: 2,
       vsync: this,
@@ -83,6 +85,8 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
 
     _transactionController.addListener(() {
       if (_transactionController.state is TransactionStateLoading) {
+        if (!mounted) return;
+
         showDialog(
           barrierDismissible: false,
           context: context,
@@ -90,9 +94,13 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
         );
       }
       if (_transactionController.state is TransactionStateSuccess) {
+        if (!mounted) return;
+
         Navigator.of(context).pop();
       }
       if (_transactionController.state is TransactionStateError) {
+        if (!mounted) return;
+
         final error = _transactionController.state as TransactionStateError;
         showCustomSnackBar(
           context: context,
@@ -110,7 +118,6 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
     _descriptionController.dispose();
     _categoryController.dispose();
     _dateController.dispose();
-    _transactionController.dispose();
     super.dispose();
   }
 
@@ -268,6 +275,7 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         controller: _dateController,
                         readOnly: true,
+                        suffixIcon: const Icon(Icons.calendar_month_outlined),
                         labelText: "Data",
                         hintText: "Selecione uma data",
                         validator: (value) {
@@ -327,9 +335,7 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                                   Navigator.of(context).pop(true);
                                 }
                               } else {
-                                await _transactionController.addTransaction(
-                                  newTransaction,
-                                );
+                                await _transactionController.addTransaction(newTransaction);
                                 if (mounted) {
                                   Navigator.of(context).pop(true);
                                 }

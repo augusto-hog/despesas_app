@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:despesas_app/common/extensions/page_controller_ext.dart';
 import 'package:flutter/material.dart';
@@ -20,17 +19,6 @@ class CustomBottomAppBar extends StatefulWidget {
 }
 
 class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
-  @override
-  void initState() {
-    widget.controller.addListener(() {
-      setState(() {
-        log(
-          widget.controller.selectedBottomAppBarItemIndex.toString(),
-        );
-      });
-    });
-    super.initState();
-  }
 
   @override
   void dispose() {

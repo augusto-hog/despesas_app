@@ -1,4 +1,4 @@
-import 'package:despesas_app/data/data_result.dart';
+import 'package:despesas_app/common/data/data_result.dart';
 
 import '../common/models/user_model.dart';
 

@@ -1,15 +1,19 @@
-import 'package:despesas_app/features/login/login_state.dart';
-import 'package:despesas_app/services/auth_service.dart';
-import 'package:despesas_app/services/secure_storage.dart';
+import 'login_state.dart';
+import '../../services/services.dart';
 import 'package:flutter/foundation.dart';
 
 class LoginController extends ChangeNotifier {
   LoginState _state = LoginStateInitial();
 
-  LoginController({required this.authService, required this.secureStorageService});
+  LoginController({
+    required this.authService,
+    required this.secureStorageService,
+    required this.syncService,
+  });
 
   final AuthService authService;
   final SecureStorageService secureStorageService;
+  final SyncService syncService;
 
   LoginState get state => _state;
 
@@ -36,6 +40,8 @@ class LoginController extends ChangeNotifier {
           key: "CURRENT_USER",
           value: data.toJson(),
         );
+
+        await syncService.syncFromServer();
 
         _changeState(LoginStateSuccess());
       },

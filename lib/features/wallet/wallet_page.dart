@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:despesas_app/common/constants/routes.dart';
-import 'package:despesas_app/common/widgets/custom_bottom_sheet.dart';
-import '../../common/constants/app_colors.dart';
-import '../../common/constants/app_text_styles.dart';
 import '../../common/extensions/sizes.dart';
-import '../../common/widgets/app_header.dart';
-import '../../common/widgets/base_page.dart';
-import '../../common/widgets/custom_circular_progress_indicator.dart';
-import '../../common/widgets/transaction_listview/transaction_listview.dart';
 import '../../locator.dart';
 import '../home/home_controller.dart';
-import '../home/widgets/balance_card/balance_card_widget_controller.dart';
-import '../home/widgets/balance_card/balance_card_widget_state.dart';
 import 'wallet_controller.dart';
 import 'wallet_state.dart';
+import '../../common/constants/constants.dart';
+import '../../common/extensions/extensions.dart';
+import '../../common/features/balance/balance.dart';
+import '../../common/widgets/widgets.dart';
 
 class WalletPage extends StatefulWidget {
   const WalletPage({super.key});
@@ -24,7 +18,7 @@ class WalletPage extends StatefulWidget {
 
 class _WalletPageState extends State<WalletPage> with SingleTickerProviderStateMixin, CustomModalSheetMixin {
   final walletController = locator.get<WalletController>();
-  final ballanceController = locator.get<BalanceCardWidgetController>();
+  final balanceController = locator.get<BalanceController>();
   late final TabController _tabController;
 
   @override
@@ -35,9 +29,11 @@ class _WalletPageState extends State<WalletPage> with SingleTickerProviderStateM
       vsync: this,
     );
     walletController.getAllTransactions();
-    ballanceController.getBalances();
+    balanceController.getBalances();
     walletController.addListener(() {
       if (walletController.state is WalletStateError) {
+        if (!mounted) return;
+
         showCustomModalBottomSheet(
           context: context,
           content: (walletController.state as WalletStateError).message,
@@ -55,8 +51,7 @@ class _WalletPageState extends State<WalletPage> with SingleTickerProviderStateM
 
   @override
   void dispose() {
-    locator.resetLazySingleton<WalletController>();
-    locator.resetLazySingleton<BalanceCardWidgetController>();
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -95,13 +90,13 @@ class _WalletPageState extends State<WalletPage> with SingleTickerProviderStateM
                     ),
                     const SizedBox(height: 8.0),
                     AnimatedBuilder(
-                        animation: ballanceController,
+                        animation: balanceController,
                         builder: (context, _) {
-                          if (ballanceController.state is BalanceCardWidgetStateLoading) {
+                          if (balanceController.state is BalanceStateLoading) {
                             return const CustomCircularProgressIndicator();
                           }
                           return Text(
-                            'R\$ ${ballanceController.balances.totalBalance.toStringAsFixed(2)}',
+                            'R\$ ${balanceController.balances.totalBalance.toStringAsFixed(2)}',
                             style: AppTextStyles.mediumText30.apply(color: AppColors.blackGrey),
                           );
                         }),
@@ -168,19 +163,17 @@ class _WalletPageState extends State<WalletPage> with SingleTickerProviderStateM
                           }
                           if (walletController.state is WalletStateSuccess &&
                               walletController.transactions.isNotEmpty) {
-                            return TransactionListView(
+                            return TransactionListView.withCalendar(
                               transactionList: walletController.transactions,
                               itemCount: walletController.transactions.length,
-                              isLoading: walletController.isLoading,
-                              onLoading: (value) {
-                                if (value) {
-                                  walletController.fetchMore;
-                                }
+                              onChange: () {
+                                walletController.getAllTransactions().then((_) => balanceController.getBalances());
                               },
                             );
                           }
+
                           return const Center(
-                            child: Text('Não existem transações cadastradas'),
+                            child: Text('There are no transactions at this time.'),
                           );
                         },
                       ),

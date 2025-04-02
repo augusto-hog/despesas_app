@@ -1,3 +1,4 @@
+import 'package:despesas_app/common/features/balance/balance.dart';
 import 'package:get_it/get_it.dart';
 
 import 'common/features/transaction/transaction.dart';
@@ -75,8 +76,9 @@ void setupDependencies() {
       transactionRepository: locator.get<TransactionRepository>(),
     ),
   );
-  locator.registerLazySingleton(
-    () => WalletController(
+
+  locator.registerLazySingleton<BalanceController>(
+    () => BalanceController(
       transactionRepository: locator.get<TransactionRepository>(),
     ),
   );

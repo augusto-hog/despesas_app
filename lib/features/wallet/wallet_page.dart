@@ -127,6 +127,7 @@ class _WalletPageState extends State<WalletPage> with SingleTickerProviderStateM
                                 ),
                               ),
                             ),
+
                             Tab(
                               child: Container(
                                 alignment: Alignment.center,

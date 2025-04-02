@@ -113,7 +113,7 @@ class _TransactionListViewState extends State<TransactionListView>
                     isScrollable: true,
                     tabs: [
                       Tab(
-                        text: DateFormat('MMMM yyyy').format(_currentMonth),
+                        text: DateFormat('MMMM yyyy', 'pt_BR').format(_currentMonth),
                       ),
                     ],
                   ),
@@ -136,7 +136,7 @@ class _TransactionListViewState extends State<TransactionListView>
 
               final color = item.value.isNegative ? AppColors.outcome : AppColors.income;
 
-              final value = "\$${item.value.toStringAsFixed(2)}";
+              final value = "R\$ ${item.value.toStringAsFixed(2)}";
 
               if (widget.showDate && !isCurrentDate) {
                 return const SizedBox.shrink();
@@ -165,18 +165,18 @@ class _TransactionListViewState extends State<TransactionListView>
                 confirmDismiss: (direction) async {
                   confirmDelete = await showCustomModalBottomSheet(
                     context: context,
-                    content: 'Confirm delete transaction',
+                    content: 'Confirmar exclusão?',
                     actions: [
                       Flexible(
                         child: PrimaryButton(
-                          text: 'Cancel',
+                          text: 'Cancelar',
                           onPressed: () => Navigator.pop(context),
                         ),
                       ),
                       const SizedBox(width: 16.0),
                       Flexible(
                         child: PrimaryButton(
-                          text: 'Confirm',
+                          text: 'Confirmar',
                           onPressed: () {
                             if (mounted) {
                               Navigator.pop(context, true);
@@ -229,7 +229,7 @@ class _TransactionListViewState extends State<TransactionListView>
                         style: AppTextStyles.mediumText18.apply(color: color),
                       ),
                       Text(
-                        item.status ? 'done' : 'pending',
+                        item.status ? 'feito' : 'pendente',
                         style: AppTextStyles.smallText13.apply(color: AppColors.lightGrey),
                       ),
                     ],

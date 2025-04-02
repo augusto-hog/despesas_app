@@ -6,18 +6,18 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  // Impede a execução do código antes de a inicialização ser concluída
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Inicializa formatação de datas em português
   await initializeDateFormatting('pt_BR', null);
 
+  // Inicializa Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // Configura Injeção de Dependências
   setupDependencies();
-  
-  // Espera a configuração das dependências ser concluída antes de iniciar o app
   await locator.allReady();
 
   runApp(const App());

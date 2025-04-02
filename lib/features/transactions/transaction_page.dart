@@ -290,6 +290,7 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                             initialDate: DateTime.now(),
                             firstDate: DateTime(1970),
                             lastDate: DateTime(2030),
+                            locale: const Locale('pt', 'BR'), 
                           );
 
                           _newDate = _newDate != null

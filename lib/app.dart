@@ -8,10 +8,10 @@ import 'package:despesas_app/features/splash/splash_page.dart';
 import 'package:despesas_app/features/stats/stats_page.dart';
 import 'package:despesas_app/features/wallet/wallet_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'common/models/transaction_model.dart';
 import 'common/themes/default_theme.dart';
 import 'features/transactions/transaction_page.dart';
-
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -19,7 +19,18 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Despesas App',
+      debugShowCheckedModeBanner: false,
       theme: CustomTheme().defaultTheme,
+      locale: const Locale('pt', 'BR'), // Define o idioma padrão
+      supportedLocales: const [
+        Locale('pt', 'BR'),
+      ],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       initialRoute: NamedRoute.splash,
       routes: {
         NamedRoute.initial: (context) => const OnboardingPage(),
@@ -31,11 +42,11 @@ class App extends StatelessWidget {
         NamedRoute.wallet: (context) => const WalletPage(),
         NamedRoute.profile: (context) => const ProfilePage(),
         NamedRoute.transaction: (context) {
-           final args = ModalRoute.of(context)?.settings.arguments;
-           return TransactionPage(
-             transaction: args != null ? args as TransactionModel : null,
-           );
-         },
+          final args = ModalRoute.of(context)?.settings.arguments;
+          return TransactionPage(
+            transaction: args != null ? args as TransactionModel : null,
+          );
+        },
       },
     );
   }

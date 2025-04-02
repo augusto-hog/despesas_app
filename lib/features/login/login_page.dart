@@ -1,19 +1,12 @@
 import 'dart:developer';
-
-import 'package:despesas_app/common/constants/app_colors.dart';
-import 'package:despesas_app/common/constants/app_text_styles.dart';
-import 'package:despesas_app/common/constants/routes.dart';
-import 'package:despesas_app/common/widgets/custom_bottom_sheet.dart';
-import 'package:despesas_app/common/widgets/custom_circular_progress_indicator.dart';
-import 'package:despesas_app/common/widgets/custom_text_form_field.dart';
-import 'package:despesas_app/common/widgets/multi_text_button.dart';
-import 'package:despesas_app/common/widgets/password_form_field.dart';
-import 'package:despesas_app/common/widgets/primary_button.dart';
-import 'package:despesas_app/common/utils/validator.dart';
-import 'package:despesas_app/features/login/login_controller.dart';
-import 'package:despesas_app/locator.dart';
 import 'package:flutter/material.dart';
-import 'package:despesas_app/features/login/login_state.dart';
+
+import '../../common/constants/constants.dart';
+import '../../common/utils/utils.dart';
+import '../../common/widgets/widgets.dart';
+import '../../locator.dart';
+import 'login_controller.dart';
+import 'login_state.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -89,12 +82,14 @@ class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
             child: Column(
               children: [
                 CustomTextFormField(
+                  key: Keys.signInEmailField,
                   controller: _emailController,
                   labelText: "Seu Email",
                   hintText: "email@email.com",
                   validator: Validator.validateEmail,
                 ),
                 PasswordFormField(
+                  key: Keys.signInPasswordField,
                   controller: _passwordController,
                   labelText: "Sua senha",
                   hintText: "********",
@@ -107,6 +102,7 @@ class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
           Padding(
             padding: const EdgeInsets.only(left: 32.0, right: 20.0, top: 16.0, bottom: 4.0),
             child: PrimaryButton(
+              key: Keys.signInButton,
               text: 'Login',
               onPressed: () {
                 final valid = _formKey.currentState != null && _formKey.currentState!.validate();
@@ -123,7 +119,7 @@ class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
           ),
           MultiTextButton(
             onPressed: () {
-              Navigator.popAndPushNamed(context, NamedRoute.home);
+              Navigator.popAndPushNamed(context, NamedRoute.cadastro);
             },
             children: [
               Text(

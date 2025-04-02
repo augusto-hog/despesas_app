@@ -1,9 +1,6 @@
 
-import 'package:despesas_app/common/constants/app_colors.dart';
-import 'package:despesas_app/common/constants/app_text_styles.dart';
-import 'package:despesas_app/common/constants/routes.dart';
-import 'package:despesas_app/common/widgets/multi_text_button.dart';
-import 'package:despesas_app/common/widgets/primary_button.dart';
+import '../../common/constants/constants.dart';
+import '../../common/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingPage extends StatelessWidget {
@@ -26,20 +23,18 @@ class OnboardingPage extends StatelessWidget {
             ),
             Text(
               'Finanças em Ordem',
-              style: AppTextStyles.mediumText36
-                  .copyWith(color: AppColors.greenTwo),
+              style: AppTextStyles.mediumText36.copyWith(color: AppColors.greenTwo),
               textAlign: TextAlign.center,
             ),
             Text(
               'Vida mais Leve.',
-              style: AppTextStyles.mediumText36
-                  .copyWith(color: AppColors.greenOne),
+              style: AppTextStyles.mediumText36.copyWith(color: AppColors.greenOne),
               textAlign: TextAlign.center,
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                  left: 32.0, right: 20.0, top: 16.0, bottom: 4.0),
+              padding: const EdgeInsets.only(left: 32.0, right: 20.0, top: 16.0, bottom: 4.0),
               child: PrimaryButton(
+                key: Keys.onboardingGetStartedButton,
                 text: 'Começar',
                 onPressed: () {
                   Navigator.pushNamed(
@@ -50,6 +45,7 @@ class OnboardingPage extends StatelessWidget {
               ),
             ),
             MultiTextButton(
+              key: Keys.onboardingAlreadyHaveAccountButton,
               onPressed: () {
                 Navigator.pushNamed(
                   context,

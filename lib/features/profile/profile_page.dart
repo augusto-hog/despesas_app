@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:despesas_app/locator.dart';
+import '../../common/constants/constants.dart';
 import '../../services/services.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +24,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
           children: [
             const Text("Profile"),
             TextButton(
+              key: Keys.profilePagelogoutButton,
                 onPressed: () async {
                   await locator.get<AuthService>().signOut();
                   await const SecureStorageService().deleteAll();

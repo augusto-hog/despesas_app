@@ -1,19 +1,11 @@
 import 'dart:developer';
 
-import 'package:despesas_app/common/constants/app_colors.dart';
-import 'package:despesas_app/common/constants/app_text_styles.dart';
-import 'package:despesas_app/common/constants/routes.dart';
-import 'package:despesas_app/common/utils/uppercase_text_formatter.dart';
-import 'package:despesas_app/common/widgets/custom_bottom_sheet.dart';
-import 'package:despesas_app/common/widgets/custom_circular_progress_indicator.dart';
-import 'package:despesas_app/common/widgets/custom_text_form_field.dart';
-import 'package:despesas_app/common/widgets/multi_text_button.dart';
-import 'package:despesas_app/common/widgets/password_form_field.dart';
-import 'package:despesas_app/common/widgets/primary_button.dart';
-import 'package:despesas_app/common/utils/validator.dart';
-import 'package:despesas_app/features/cadastro/sign_up_controller.dart';
-import 'package:despesas_app/features/cadastro/sign_up_state.dart';
-import 'package:despesas_app/locator.dart';
+import '../../common/constants/constants.dart';
+import '../../common/utils/utils.dart';
+import '../../common/widgets/widgets.dart';
+import '../../locator.dart';
+import 'sign_up_controller.dart';
+import 'sign_up_state.dart';
 import 'package:flutter/material.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -61,11 +53,10 @@ class _SignUpPageState extends State<SignUpPage> with CustomModalSheetMixin {
       if (_signUpController.state is SignUpErrorState) {
         final error = _signUpController.state as SignUpErrorState;
         showCustomModalBottomSheet(
-             context: context,
+          context: context,
           content: error.message,
-          buttonText: "Tentar novamente", 
+          buttonText: "Tentar novamente",
         );
-
       }
     });
   }
@@ -79,22 +70,19 @@ class _SignUpPageState extends State<SignUpPage> with CustomModalSheetMixin {
           Text(
             'Finanças em Ordem',
             textAlign: TextAlign.center,
-            style:
-                AppTextStyles.mediumText36.copyWith(color: AppColors.greenTwo),
+            style: AppTextStyles.mediumText36.copyWith(color: AppColors.greenTwo),
           ),
           Text(
             'Vida mais Leve.',
             textAlign: TextAlign.center,
-            style:
-                AppTextStyles.mediumText36.copyWith(color: AppColors.greenOne),
+            style: AppTextStyles.mediumText36.copyWith(color: AppColors.greenOne),
           ),
           SizedBox(
             width: 200, // Defina a largura desejada
             height: 200, // Defina a altura desejada
             child: Image.asset(
               'assets/images/form.png',
-              fit: BoxFit
-                  .contain, // Ajuste a forma como a imagem se adapta ao Container
+              fit: BoxFit.contain, // Ajuste a forma como a imagem se adapta ao Container
             ),
           ),
           Form(
@@ -102,6 +90,7 @@ class _SignUpPageState extends State<SignUpPage> with CustomModalSheetMixin {
               child: Column(
                 children: [
                   CustomTextFormField(
+                    key: Keys.signUpNameField,
                     controller: _nameController,
                     labelText: "seu nome",
                     hintText: "Digite seu nome",
@@ -111,20 +100,22 @@ class _SignUpPageState extends State<SignUpPage> with CustomModalSheetMixin {
                     validator: Validator.validateName,
                   ),
                   CustomTextFormField(
+                    key: Keys.signUpEmailField,
                     controller: _emailController,
                     labelText: "seu Email",
                     hintText: "email@email.com",
                     validator: Validator.validateEmail,
                   ),
                   PasswordFormField(
+                    key: Keys.signUpPasswordField,
                     controller: _passwordController,
                     labelText: "escolha sua senha",
                     hintText: "********",
-                    helperText:
-                        "Mínimo de 8 caracteres, 1 letra maiuscula, 1 número e 1 simbolo",
+                    helperText: "Mínimo de 8 caracteres, 1 letra maiuscula, 1 número e 1 simbolo",
                     validator: Validator.validatePassword,
                   ),
                   PasswordFormField(
+                    key: Keys.signUpConfirmPasswordField,
                     labelText: "Confirme sua senha",
                     hintText: "********",
                     validator: (value) => Validator.validateConfirmPassword(
@@ -135,37 +126,37 @@ class _SignUpPageState extends State<SignUpPage> with CustomModalSheetMixin {
                 ],
               )),
           Padding(
-            padding: const EdgeInsets.only(
-                left: 32.0, right: 20.0, top: 16.0, bottom: 4.0),
+            padding: const EdgeInsets.only(left: 32.0, right: 20.0, top: 16.0, bottom: 4.0),
             child: PrimaryButton(
+              key: Keys.signUpButton,
               text: 'Cadastre-se',
               onPressed: () async {
-              final valid = _formKey.currentState != null &&
-                  _formKey.currentState!.validate();
-              if (valid) {
-                try {
-                  await _signUpController.signUp(
-                    name: _nameController.text,
-                    email: _emailController.text,
-                    password: _passwordController.text,
-                  );
-                  log('Usuário cadastrado com sucesso');
-                  // Aqui você pode adicionar um redirecionamento ou mensagem de sucesso
-                } catch (e) {
-                  log('Erro ao cadastrar usuário: $e'); // Log do erro
+                final valid = _formKey.currentState != null && _formKey.currentState!.validate();
+                if (valid) {
+                  try {
+                    await _signUpController.signUp(
+                      name: _nameController.text,
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                    );
+                    log('Usuário cadastrado com sucesso');
+                    // Aqui você pode adicionar um redirecionamento ou mensagem de sucesso
+                  } catch (e) {
+                    log('Erro ao cadastrar usuário: $e'); // Log do erro
+                  }
+                } else {
+                  log('Formulário inválido');
                 }
-              } else {
-                log('Formulário inválido');
-              }
-            },
+              },
             ),
           ),
           MultiTextButton(
+            key: Keys.signUpAlreadyHaveAccountButton,
             onPressed: () {
               Navigator.popAndPushNamed(
-                    context,
-                    NamedRoute.login,
-                  );
+                context,
+                NamedRoute.login,
+              );
             },
             children: [
               Text(

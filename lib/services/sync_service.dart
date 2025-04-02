@@ -59,9 +59,11 @@ class SyncService {
       path: Queries.qGetTrasactions,
     );
 
-    final parsedTransactionsFromServer = List.from(transactionsFromServerResponse['transaction']);
+    final parsedTransactionsFromServer = List.from(transactionsFromServerResponse['transaction'] ?? []);
 
     final transactionsFromServer = parsedTransactionsFromServer.map((e) => TransactionModel.fromMap(e)).toList();
+
+    if (transactionsFromServer.isEmpty) return;
 
     clock.start();
 

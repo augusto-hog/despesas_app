@@ -25,5 +25,8 @@ abstract class TransactionRepository {
 
   Future<DataResult<BalancesModel>> getBalances();
 
-  Future<void> updateBalance(TransactionModel newtTansaction);
+  Future<DataResult<BalancesModel>> updateBalance({
+    TransactionModel? oldTransaction,
+    required TransactionModel newTransaction,
+  });
 }

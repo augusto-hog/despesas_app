@@ -2,7 +2,7 @@
 
 import 'dart:developer';
 
-import 'package:despesas_app/common/widgets/custom_snackbar.dart';
+import '../../common/features/balance/balance.dart';
 import 'package:flutter/material.dart';
 
 import '../../common/features/transaction/transaction.dart';
@@ -27,11 +27,12 @@ class TransactionPage extends StatefulWidget {
 
 class _TransactionPageState extends State<TransactionPage> with SingleTickerProviderStateMixin, CustomSnackBar {
   final _transactionController = locator.get<TransactionController>();
+  final _balanceController = locator.get<BalanceController>();
 
   final _formKey = GlobalKey<FormState>();
 
-  final _incomes = ['Services', 'Investment', 'Other'];
-  final _outcomes = ['House', 'Grocery', 'Other'];
+  final _incomes = ['Serviços', 'Investimentos', 'Outros'];
+  final _outcomes = ['Casa', 'Mercado', 'Outros'];
 
   DateTime? _newDate;
   bool value = false;
@@ -329,11 +330,18 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                               }
                               if (widget.transaction != null) {
                                 await _transactionController.updateTransaction(newTransaction);
+                                await _balanceController.updateBalance(
+                                  oldTransaction: widget.transaction!,
+                                  newTransaction: newTransaction,
+                                );
                                 if (mounted) {
                                   Navigator.of(context).pop(true);
                                 }
                               } else {
                                 await _transactionController.addTransaction(newTransaction);
+                                await _balanceController.updateBalance(
+                                  newTransaction: newTransaction,
+                                );
                                 if (mounted) {
                                   Navigator.of(context).pop(true);
                                 }

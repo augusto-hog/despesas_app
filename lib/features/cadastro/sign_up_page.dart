@@ -65,6 +65,7 @@ class _SignUpPageState extends State<SignUpPage> with CustomModalSheetMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
+        key: Keys.signUpListView,
         children: [
           const SizedBox(height: 40),
           Text(

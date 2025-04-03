@@ -143,9 +143,9 @@ class SyncException extends Failure {
   String get message {
     switch (code) {
       case 'error':
-        return 'error while syncing';
+        return 'Erro ao sincronizar dados. Verifique sua conexão e tente novamente.';
       default:
-        return 'unkown error';
+        return 'Ocorreu um erro ao sincronizar dados. Por favor, tente novamente mais tarde.';
     }
   }
 }

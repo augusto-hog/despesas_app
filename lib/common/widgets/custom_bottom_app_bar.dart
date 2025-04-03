@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/app_colors.dart';
+import '../extensions/page_controller_ext.dart';
 
 class CustomBottomAppBar extends StatefulWidget {
   final PageController controller;
@@ -11,26 +12,28 @@ class CustomBottomAppBar extends StatefulWidget {
     this.selectedItemColor,
     required this.children,
     required this.controller,
-  }) : assert(children.length == 5, 'children.length must be 5');
+  })  : assert(children.length == 5, 'children.length must be 5');
 
   @override
   State<CustomBottomAppBar> createState() => _CustomBottomAppBarState();
 }
 
 class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
-  int selectedIndex = 0;
-
   @override
   void initState() {
     super.initState();
-    selectedIndex = widget.controller.page?.toInt() ?? 0;
+
+    widget.controller.addListener(_handlePageChange);
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      selectedIndex = index;
-    });
-    widget.controller.jumpToPage(index);
+  @override
+  void dispose() {
+    widget.controller.dispose();
+    super.dispose();
+  }
+
+  void _handlePageChange() {
+    setState(() {});
   }
 
   @override
@@ -39,27 +42,34 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
       shape: const CircularNotchedRectangle(),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: widget.children.asMap().entries.map(
-          (entry) {
-            final index = entry.key;
-            final item = entry.value;
-            final isSelected = index == selectedIndex;
+        children: widget.children.map(
+          (item) {
+            bool currentItem;
 
-            return Expanded(
-              key: item.key,
-              child: InkWell(
-                onTap: () {
-                  _onItemTapped(index);
-                  item.onPressed?.call();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: Icon(
-                    isSelected ? item.primaryIcon : item.secondaryIcon,
-                    color: isSelected ? widget.selectedItemColor : AppColors.lightGrey,
+            currentItem = widget.children.indexOf(item) ==
+                widget.controller.selectedBottomAppBarItemIndex;
+            return Builder(
+              builder: (context) {
+                return Expanded(
+                  key: item.key,
+                  child: InkWell(
+                    onTap: item.onPressed,
+                    onTapUp: (_) {
+                      widget.controller.setBottomAppBarItemIndex =
+                          widget.children.indexOf(item);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      child: Icon(
+                        currentItem ? item.primaryIcon : item.secondaryIcon,
+                        color: currentItem
+                            ? widget.selectedItemColor
+                            : AppColors.lightGrey,
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             );
           },
         ).toList(),

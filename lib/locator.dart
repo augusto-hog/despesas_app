@@ -1,4 +1,5 @@
 import 'package:despesas_app/common/features/balance/balance.dart';
+import 'package:despesas_app/services/sync_service/sync_controller.dart';
 import 'package:get_it/get_it.dart';
 
 import 'common/features/transaction/transaction.dart';
@@ -81,6 +82,12 @@ void setupDependencies() {
     () => TransactionController(
       transactionRepository: locator.get<TransactionRepository>(),
       secureStorageService: const SecureStorageService(),
+    ),
+  );
+
+  locator.registerFactory<SyncController>(
+    () => SyncController(
+      syncService: locator.get<SyncService>(),
     ),
   );
 }

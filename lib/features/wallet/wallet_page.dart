@@ -45,7 +45,7 @@ class _WalletPageState extends State<WalletPage> with SingleTickerProviderStateM
   void _handleWalletStateChange() {
     final state = _walletController.state;
     switch (state.runtimeType) {
-      case WalletStateError:
+      case WalletStateError _:
         if (!mounted) return;
 
         showCustomModalBottomSheet(

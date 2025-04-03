@@ -1,5 +1,5 @@
 import 'package:despesas_app/services/auth_service/auth_service.dart';
-import '../common/data/exceptions.dart';
+import '../../common/data/exceptions.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'data_service.dart';
 

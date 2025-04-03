@@ -4,11 +4,11 @@ import '../../common/features/transaction/transaction.dart';
 import '../wallet/wallet_controller.dart';
 
 import '../../common/constants/constants.dart';
-import '../../common/widgets/custom_bottom_app_bar.dart';
+import '../../common/widgets/widgets.dart';
 import '../../locator.dart';
-import '../profile/profile_page.dart';
+import '../profile/profile.dart';
 import '../stats/stats_page.dart';
-import '../wallet/wallet_page.dart';
+import '../wallet/wallet.dart';
 import 'home_controller.dart';
 import 'home_page.dart';
 

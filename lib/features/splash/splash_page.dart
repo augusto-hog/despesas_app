@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:despesas_app/common/widgets/widgets.dart';
 import 'package:despesas_app/services/sync_service/sync_controller.dart';
-import '../../services/sync_service/sync_state.dart';
-import '../../common/constants/app_colors.dart';
-import '../../common/constants/app_text_styles.dart';
-import '../../common/constants/routes.dart';
-import '../../common/extensions/sizes.dart';
+import '../../common/constants/constants.dart';
+import '../../common/extensions/extensions.dart';
+import '../../services/sync_service/sync_service.dart';
 import '../../locator.dart';
 import 'splash_controller.dart';
 import 'splash_state.dart';

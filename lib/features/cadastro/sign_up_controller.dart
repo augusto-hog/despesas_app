@@ -1,6 +1,5 @@
 import 'package:despesas_app/features/cadastro/sign_up_state.dart';
-import 'package:despesas_app/services/auth_service/auth_service.dart';
-import 'package:despesas_app/services/secure_storage.dart';
+import '../../services/services.dart';
 import 'package:flutter/foundation.dart';
 
 class SignUpController extends ChangeNotifier {

@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:despesas_app/common/data/exceptions.dart';
-import '../common/data/data.dart';
-import '../locator.dart';
+import '../../common/data/data.dart';
+import '../../locator.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'data_service.dart';

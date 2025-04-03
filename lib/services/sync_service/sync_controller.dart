@@ -1,7 +1,7 @@
 import 'package:despesas_app/services/services.dart';
 import 'package:flutter/foundation.dart';
 
-import 'sync_state.dart';
+import 'sync_service.dart';
 
 class SyncController extends ChangeNotifier {
   SyncController({required this.syncService});

@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:despesas_app/services/sync_service/sync_controller.dart';
 
-import '../../services/sync_service/sync_state.dart';
+import '../../services/sync_service/sync_service.dart';
 import '../../common/constants/constants.dart';
 import '../../common/utils/utils.dart';
 import '../../common/widgets/widgets.dart';

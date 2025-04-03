@@ -1,6 +1,6 @@
 import 'package:despesas_app/common/data/data_result.dart';
 
-import '../common/models/user_model.dart';
+import '../../common/models/user_model.dart';
 
 abstract class AuthService {
   Future<DataResult<UserModel>> signUp({

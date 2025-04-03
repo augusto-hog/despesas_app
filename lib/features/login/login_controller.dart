@@ -8,12 +8,10 @@ class LoginController extends ChangeNotifier {
   LoginController({
     required this.authService,
     required this.secureStorageService,
-    required this.syncService,
   });
 
   final AuthService authService;
   final SecureStorageService secureStorageService;
-  final SyncService syncService;
 
   LoginState get state => _state;
 
@@ -41,9 +39,10 @@ class LoginController extends ChangeNotifier {
           value: data.toJson(),
         );
 
-        await syncService.syncFromServer();
-
-        _changeState(LoginStateSuccess());
+        result.fold(
+          (error) => _changeState(LoginStateError(error.message)),
+          (_) => _changeState(LoginStateSuccess()),
+        );
       },
     );
   }

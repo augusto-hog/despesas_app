@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:despesas_app/services/sync_service/sync_controller.dart';
 
+import '../../services/sync_service/sync_state.dart';
 import '../../common/constants/constants.dart';
 import '../../common/utils/utils.dart';
 import '../../common/widgets/widgets.dart';
@@ -20,42 +22,73 @@ class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _signInController = locator.get<LoginController>();
+  final _syncController = locator.get<SyncController>();
+
+  @override
+  void initState() {
+    super.initState();
+    _signInController.addListener(_handleSignInStateChange);
+    _syncController.addListener(_handleSyncStateChange);
+  }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _signInController.dispose();
+    _syncController.dispose();
     super.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
-
-    _signInController.addListener(() {
-      if (_signInController.state is LoginStateLoading) {
+  void _handleSignInStateChange() {
+    switch (_signInController.state.runtimeType) {
+      case LoginStateLoading:
         showDialog(
           context: context,
-          barrierDismissible: false, // Impede que o usuário feche o diálogo tocando fora
           builder: (context) => const CustomCircularProgressIndicator(),
         );
-      }
-
-      if (_signInController.state is LoginStateSuccess) {
-        Navigator.pop(context); // Fecha o diálogo de loading
-        Navigator.pushReplacementNamed(context, NamedRoute.home);
-      }
-
-      if (_signInController.state is LoginStateError) {
-        Navigator.pop(context); // Fecha o diálogo de loading, se estiver aberto
-        final error = _signInController.state as LoginStateError;
+        break;
+      case LoginStateSuccess:
+        _syncController.syncFromServer();
+        break;
+      case LoginStateError:
+        Navigator.pop(context);
         showCustomModalBottomSheet(
           context: context,
-          content: error.message,
-          buttonText: "Tentar novamente",
+          content: (_signInController.state as LoginStateError).message,
+          buttonText: "Try again",
         );
-      }
-    });
+        break;
+    }
+  }
+
+  void _handleSyncStateChange() {
+    switch (_syncController.state.runtimeType) {
+      case DownloadedDataFromServer:
+        _syncController.syncToServer();
+        break;
+      case UploadedDataToServer:
+        Navigator.pushReplacementNamed(
+          context,
+          NamedRoute.home,
+        );
+        break;
+      case SyncStateError:
+      case UploadDataToServerError:
+      case DownloadDataFromServerError:
+        Navigator.pop(context);
+        showCustomModalBottomSheet(
+          context: context,
+          content: (_syncController.state as SyncStateError).message,
+          buttonText: "Try again",
+          onPressed: () => Navigator.pushNamedAndRemoveUntil(
+            context,
+            NamedRoute.login,
+            (route) => false,
+          ),
+        );
+        break;
+    }
   }
 
   @override

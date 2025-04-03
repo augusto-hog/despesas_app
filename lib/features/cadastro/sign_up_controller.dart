@@ -12,7 +12,7 @@ class SignUpController extends ChangeNotifier {
   final AuthService authService;
   final SecureStorageService secureStorageService;
 
-  SignUpState _state = SignUpInitialState();
+  SignUpState _state = SignUpStateInitial();
 
   SignUpState get state => _state;
 
@@ -26,7 +26,7 @@ class SignUpController extends ChangeNotifier {
     required email,
     required password,
   }) async {
-    _changeState(SignUpLoadingState());
+    _changeState(SignUpStateLoading());
 
     final result = await authService.signUp(
       name: name,
@@ -35,14 +35,14 @@ class SignUpController extends ChangeNotifier {
     );
 
     result.fold(
-      (error) => _changeState(SignUpErrorState(error.message)),
+      (error) => _changeState(SignUpStateError(error.message)),
       (data) async {
         await secureStorageService.write(
           key: "CURRENT_USER",
           value: data.toJson(),
         );
 
-        _changeState(SignUpSuccessState());
+        _changeState(SignUpStateSuccess());
       },
     );
   }

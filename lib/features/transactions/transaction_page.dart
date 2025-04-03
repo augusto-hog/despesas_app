@@ -35,8 +35,8 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
 
   final _formKey = GlobalKey<FormState>();
 
-  final _incomes = ['Serviços', 'Investimento', 'Outros'];
-  final _outcomes = ['Casa', 'Mercado', 'Outros'];
+  final _incomes = ['Services', 'Investment', 'Other'];
+  final _outcomes = ['House', 'Grocery', 'Other'];
 
   DateTime? _newDate;
   bool value = false;
@@ -44,7 +44,7 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
   final _descriptionController = TextEditingController();
   final _categoryController = TextEditingController();
   final _dateController = TextEditingController();
-  final _amountController = MoneyMaskedTextController(prefix: 'R\$');
+  final _amountController = MoneyMaskedTextController(prefix: '\$');
 
   late final TabController _tabController;
 
@@ -83,32 +83,7 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
       initialIndex: _initialIndex,
     );
 
-    _transactionController.addListener(() {
-      if (_transactionController.state is TransactionStateLoading) {
-        if (!mounted) return;
-
-        showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) => const CustomCircularProgressIndicator(),
-        );
-      }
-      if (_transactionController.state is TransactionStateSuccess) {
-        if (!mounted) return;
-
-        Navigator.of(context).pop();
-      }
-      if (_transactionController.state is TransactionStateError) {
-        if (!mounted) return;
-
-        final error = _transactionController.state as TransactionStateError;
-        showCustomSnackBar(
-          context: context,
-          text: error.message,
-          type: SnackBarType.error,
-        );
-      }
-    });
+    _transactionController.addListener(_handleTransactionStateChange);
   }
 
   @override
@@ -118,7 +93,34 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
     _descriptionController.dispose();
     _categoryController.dispose();
     _dateController.dispose();
+    _transactionController.removeListener(_handleTransactionStateChange);
     super.dispose();
+  }
+
+  void _handleTransactionStateChange() {
+    final state = _transactionController.state;
+    switch (state.runtimeType) {
+      case TransactionStateLoading:
+        if (!mounted) return;
+        showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) => const CustomCircularProgressIndicator(),
+        );
+        break;
+      case TransactionStateSuccess:
+        if (!mounted) return;
+        Navigator.of(context).pop();
+        break;
+      case TransactionStateError:
+        if (!mounted) return;
+        showCustomSnackBar(
+          context: context,
+          text: (state as TransactionStateError).message,
+          type: SnackBarType.error,
+        );
+        break;
+    }
   }
 
   @override
@@ -290,7 +292,7 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                             initialDate: DateTime.now(),
                             firstDate: DateTime(1970),
                             lastDate: DateTime(2030),
-                            locale: const Locale('pt', 'BR'), 
+                            locale: const Locale('pt', 'BR'),
                           );
 
                           _newDate = _newDate != null

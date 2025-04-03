@@ -24,8 +24,8 @@ class _SignUpPageState extends State<SignUpPage> with CustomModalSheetMixin {
 
   @override
   void dispose() {
-    _emailController.dispose();
     _nameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     _signUpController.dispose();
     super.dispose();
@@ -34,31 +34,35 @@ class _SignUpPageState extends State<SignUpPage> with CustomModalSheetMixin {
   @override
   void initState() {
     super.initState();
-    _signUpController.addListener(() {
-      if (_signUpController.state is SignUpLoadingState) {
+    _signUpController.addListener(_handleSignUpstateChange);
+  }
+
+  void _handleSignUpstateChange() {
+    final state = _signUpController.state;
+    switch (state.runtimeType) {
+      case SignUpStateLoading:
         showDialog(
           context: context,
           builder: (context) => const CustomCircularProgressIndicator(),
         );
-      }
-
-      if (_signUpController.state is SignUpSuccessState) {
-        // Fecha o diálogo de loading, se estiver aberto
+        break;
+      case SignUpStateSuccess:
         Navigator.pop(context);
-        Navigator.popAndPushNamed(
+
+        Navigator.pushReplacementNamed(
           context,
           NamedRoute.home,
         );
-      }
-      if (_signUpController.state is SignUpErrorState) {
-        final error = _signUpController.state as SignUpErrorState;
+        break;
+      case SignUpStateError:
+        Navigator.pop(context);
         showCustomModalBottomSheet(
           context: context,
-          content: error.message,
-          buttonText: "Tentar novamente",
+          content: (state as SignUpStateError).message,
+          buttonText: "Try again",
         );
-      }
-    });
+        break;
+    }
   }
 
   @override

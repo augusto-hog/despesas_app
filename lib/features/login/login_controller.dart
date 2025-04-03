@@ -15,35 +15,31 @@ class LoginController extends ChangeNotifier {
 
   LoginState get state => _state;
 
-  void _changeState(LoginState newstate) {
-    _state = newstate;
+  void _changeState(LoginState newState) {
+    _state = newState;
     notifyListeners();
   }
 
-  Future<void> login({
-    required email,
-    required password,
-  }) async {
+  Future<void> login({required email, required password}) async {
     _changeState(LoginStateLoading());
 
-    final result = await authService.signIn(
-      email: email,
-      password: password,
-    );
+    try {
+      final result = await authService.signIn(email: email, password: password);
+      result.fold(
+        (error) {
+          _changeState(LoginStateError(error.message));
+        },
+        (data) async {
+          await secureStorageService.write(
+            key: "CURRENT_USER",
+            value: data.toJson(),
+          );
 
-    result.fold(
-      (error) => _changeState(LoginStateError(error.message)),
-      (data) async {
-        await secureStorageService.write(
-          key: "CURRENT_USER",
-          value: data.toJson(),
-        );
-
-        result.fold(
-          (error) => _changeState(LoginStateError(error.message)),
-          (_) => _changeState(LoginStateSuccess()),
-        );
-      },
-    );
+          _changeState(LoginStateSuccess());
+        },
+      );
+    } catch (e) {
+      _changeState(LoginStateError('Erro inesperado durante o login.'));
+    }
   }
 }

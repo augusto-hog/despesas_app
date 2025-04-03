@@ -51,7 +51,7 @@ class _WalletPageState extends State<WalletPage> with SingleTickerProviderStateM
         showCustomModalBottomSheet(
           context: context,
           content: (_walletController.state as WalletStateError).message,
-          buttonText: 'Go to login',
+          buttonText: 'Ir para o Login',
           isDismissible: false,
           onPressed: () => Navigator.pushNamedAndRemoveUntil(
             context,

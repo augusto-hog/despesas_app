@@ -1,4 +1,3 @@
-import 'package:despesas_app/services/services.dart';
 import 'package:flutter/foundation.dart';
 
 import 'sync_service.dart';

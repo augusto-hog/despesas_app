@@ -1,6 +1,4 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
-
 import '../../services/sync_service/sync_service.dart';
 import '../../common/constants/constants.dart';
 import '../../common/utils/utils.dart';
@@ -40,7 +38,9 @@ class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
   }
 
   void _handleSignInStateChange() {
-    switch (_signInController.state.runtimeType) {
+    final state = _signInController.state;
+
+    switch (state) {
       case LoginStateLoading _:
         showDialog(
           context: context,
@@ -48,13 +48,13 @@ class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
         );
         break;
       case LoginStateSuccess _:
-        _syncController.syncFromServer();
+        Navigator.pushReplacementNamed(context, NamedRoute.splash);
         break;
       case LoginStateError _:
         Navigator.pop(context);
         showCustomModalBottomSheet(
           context: context,
-          content: (_signInController.state as LoginStateError).message,
+          content: state.message,
           buttonText: "Try again",
         );
         break;
@@ -62,18 +62,19 @@ class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
   }
 
   void _handleSyncStateChange() {
-    switch (_syncController.state.runtimeType) {
-      case DownloadedDataFromServer _:
+    final syncState = _syncController.state;
+
+    switch (syncState.runtimeType) {
+      case DownloadedDataFromServer:
         _syncController.syncToServer();
         break;
-      case UploadedDataToServer _:
-        Navigator.pushReplacementNamed(
-          context,
-          NamedRoute.home,
-        );
+      case UploadedDataToServer:
+        Navigator.pushReplacementNamed(context, NamedRoute.home);
         break;
-      case SyncStateError _:
-      Navigator.pop(context);
+      case SyncStateError:
+      case UploadDataToServerError:
+      case DownloadDataFromServerError:
+        Navigator.pop(context);
         showCustomModalBottomSheet(
           context: context,
           content: (_syncController.state as SyncStateError).message,
@@ -136,15 +137,13 @@ class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
               key: Keys.signInButton,
               text: 'Login',
               onPressed: () {
-                final valid = _formKey.currentState != null && _formKey.currentState!.validate();
+                final valid = _formKey.currentState?.validate() ?? false;
                 if (valid) {
                   _signInController.login(
                     email: _emailController.text,
                     password: _passwordController.text,
                   );
-                } else {
-                  log('Formulário inválido');
-                }
+                } else {}
               },
             ),
           ),

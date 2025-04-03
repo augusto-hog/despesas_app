@@ -1,7 +1,7 @@
-import 'package:despesas_app/services/auth_service/auth_service.dart';
-import '../../common/data/exceptions.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'data_service.dart';
+
+import '../../common/data/data.dart';
+import '../services.dart';
 
 class GraphQLService implements DataService<Map<String, dynamic>> {
   GraphQLService({
@@ -58,14 +58,15 @@ class GraphQLService implements DataService<Map<String, dynamic>> {
       );
 
       final result = await client.mutate(options);
-      if (result.hasException) {
-        throw result.exception!;
-      }
-      return result.data ?? {};
-    } catch (e) {
-      _handleException(e);
 
-      return {};
+      return {
+        'data': result.data,
+        'errors': result.exception?.graphqlErrors.map((e) => e.message).toList(),
+      };
+    } catch (e) {
+      // Esta função já converte para a exceção certa
+      _handleException(e);
+      rethrow; // ← deixe a exceção real continuar
     }
   }
 
@@ -138,7 +139,9 @@ class GraphQLService implements DataService<Map<String, dynamic>> {
 
       return result.data ?? {};
     } catch (e) {
-      rethrow;
+      _handleException(e);
+
+      return {};
     }
   }
 }

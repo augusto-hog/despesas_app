@@ -146,13 +146,23 @@ class SyncException extends Failure {
   const SyncException({required this.code});
 
   final String code;
+
   @override
   String get message {
     switch (code) {
       case 'error':
         return 'Erro ao sincronizar dados. Verifique sua conexão e tente novamente.';
+      case 'connection-error':
+        return 'Falha de conexão. Verifique sua internet e tente novamente.';
+      case 'user-id-null':
+        return 'Não foi possível sincronizar: transação sem usuário associado.';
+      case 'invalid-graphql-response':
+        return 'Erro ao comunicar com o servidor. Resposta inválida.';
       default:
-        return 'Ocorreu um erro ao sincronizar dados. Por favor, tente novamente mais tarde.';
+        return 'Erro inesperado durante a sincronização: $code';
     }
   }
+
+  @override
+  String toString() => 'SyncException: $code';
 }

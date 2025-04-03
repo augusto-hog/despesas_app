@@ -1,14 +1,12 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:developer';
+import 'dart:math' as math;
 
-import '../../common/features/balance/balance.dart';
 import 'package:flutter/material.dart';
-
-import '../../common/features/transaction/transaction.dart';
 
 import '../../common/constants/constants.dart';
 import '../../common/extensions/extensions.dart';
+import '../../common/features/balance/balance.dart';
+import '../../common/features/transaction/transaction.dart';
 import '../../common/models/models.dart';
 import '../../common/utils/utils.dart';
 import '../../common/widgets/widgets.dart';
@@ -31,8 +29,24 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
 
   final _formKey = GlobalKey<FormState>();
 
-  final _incomes = ['Serviços', 'Investimentos', 'Outros'];
-  final _outcomes = ['Casa', 'Mercado', 'Outros'];
+  final _incomes = [
+    'Salário',
+    'Freelance',
+    'Investimentos',
+    'Reembolsos',
+    'Presentes',
+    'Outros',
+  ];
+  final _outcomes = [
+    'Casa',
+    'Supermercado',
+    'Transporte',
+    'Saúde',
+    'Lazer',
+    'Educação',
+    'Assinaturas',
+    'Outros',
+  ];
 
   DateTime? _newDate;
   bool value = false;
@@ -40,7 +54,7 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
   final _descriptionController = TextEditingController();
   final _categoryController = TextEditingController();
   final _dateController = TextEditingController();
-  final _amountController = MoneyMaskedTextController(prefix: '\$');
+  final _amountController = MoneyMaskedTextController(prefix: 'R\$');
 
   late final TabController _tabController;
 
@@ -96,7 +110,7 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
   void _handleTransactionStateChange() {
     final state = _transactionController.state;
     switch (state.runtimeType) {
-      case TransactionStateLoading _:
+      case TransactionStateLoading:
         if (!mounted) return;
         showDialog(
           barrierDismissible: false,
@@ -104,11 +118,11 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
           builder: (context) => const CustomCircularProgressIndicator(),
         );
         break;
-      case TransactionStateSuccess _:
+      case TransactionStateSuccess:
         if (!mounted) return;
         Navigator.of(context).pop();
         break;
-      case TransactionStateError _:
+      case TransactionStateError:
         if (!mounted) return;
         showCustomSnackBar(
           context: context,
@@ -125,6 +139,7 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
       body: Stack(
         children: [
           AppHeader(
+            preffixOption: true,
             title: widget.transaction != null ? 'Editar Transação' : 'Nova Transação',
           ),
           Positioned(
@@ -168,7 +183,7 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                                     ),
                                   ),
                                   child: Text(
-                                    'Receita',
+                                    'Entrada',
                                     style: AppTextStyles.mediumText16w500.apply(color: AppColors.darkGrey),
                                   ),
                                 ),
@@ -207,20 +222,11 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                                   value = !value;
                                 });
                               },
-                              icon: AnimatedSwitcher(
+                              icon: AnimatedContainer(
+                                transform: value ? Matrix4.rotationX(math.pi * 2) : Matrix4.rotationX(math.pi),
+                                transformAlignment: Alignment.center,
                                 duration: const Duration(milliseconds: 200),
-                                transitionBuilder: (child, animation) {
-                                  return RotationTransition(
-                                    turns: Tween(begin: 0.5, end: 1.0).animate(animation), // Faz o giro suave
-                                    child: child,
-                                  );
-                                },
-                                child: Icon(
-                                  value
-                                      ? Icons.thumb_up_alt_rounded
-                                      : Icons.thumb_up_off_alt_rounded, // Alterna entre os ícones
-                                  key: ValueKey<bool>(value), // Necessário para o AnimatedSwitcher
-                                ),
+                                child: const Icon(Icons.thumb_up_alt_rounded),
                               ),
                             );
                           },
@@ -230,10 +236,10 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         controller: _descriptionController,
                         labelText: 'Descrição',
-                        hintText: 'Insira a Descrição',
+                        hintText: 'Digite uma descrição',
                         validator: (value) {
                           if (_descriptionController.text.isEmpty) {
-                            return 'Esse campo não pode ser vazio.';
+                            return 'This field cannot be empty.';
                           }
                           return null;
                         },
@@ -246,7 +252,7 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                         hintText: "Selecione uma categoria",
                         validator: (value) {
                           if (_categoryController.text.isEmpty) {
-                            return 'Esse campo não pode ser vazio.';
+                            return 'This field cannot be empty.';
                           }
                           return null;
                         },
@@ -278,7 +284,7 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                         hintText: "Selecione uma data",
                         validator: (value) {
                           if (_dateController.text.isEmpty) {
-                            return 'Esse campo não pode ser vazio.';
+                            return 'This field cannot be empty.';
                           }
                           return null;
                         },
@@ -288,7 +294,6 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                             initialDate: DateTime.now(),
                             firstDate: DateTime(1970),
                             lastDate: DateTime(2030),
-                            locale: const Locale('pt', 'BR'),
                           );
 
                           _newDate = _newDate != null
@@ -306,7 +311,7 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24.0),
                         child: PrimaryButton(
-                          text: widget.transaction != null ? 'Salvar' : 'Adicionar',
+                          text: widget.transaction != null ? 'Salvar' : 'Novo',
                           onPressed: () async {
                             FocusScope.of(context).unfocus();
                             if (_formKey.currentState!.validate()) {
@@ -347,7 +352,7 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                                 }
                               }
                             } else {
-                              log('invalido');
+                              log('invalid');
                             }
                           },
                         ),

@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+
 import '../constants/constants.dart';
 import '../extensions/extensions.dart';
 import 'widgets.dart';
 
 class AppHeader extends StatefulWidget {
-  final String? title;
-  final bool hasOptions;
-  final VoidCallback? onPressed;
-
   const AppHeader({
     super.key,
     this.title,
-    this.hasOptions = false,
+    this.suffixOption = false,
+    this.preffixOption = false,
     this.onPressed,
   });
+
+  final String? title;
+  final bool suffixOption;
+  final bool preffixOption;
+  final VoidCallback? onPressed;
 
   @override
   State<AppHeader> createState() => _AppHeaderState();
@@ -64,7 +67,7 @@ class _AppHeaderState extends State<AppHeader> {
           top: 74.h,
           child: _child,
         ),
-        if (widget.title != null)
+        if (widget.preffixOption)
           Positioned(
             left: 8.0.w,
             top: 56.h,
@@ -79,7 +82,7 @@ class _AppHeaderState extends State<AppHeader> {
               ),
             ),
           ),
-        if (widget.hasOptions)
+        if (widget.suffixOption)
           Positioned(
             right: 8.0.w,
             top: 56.0.h,

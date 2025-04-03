@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+
+import 'common/constants/constants.dart';
+import 'common/models/models.dart';
+import 'common/themes/default_theme.dart';
 import 'features/home/home.dart';
 import 'features/onboarding/onboarding.dart';
 import 'features/profile/profile.dart';
@@ -8,12 +12,7 @@ import 'features/splash/splash.dart';
 import 'features/stats/stats.dart';
 import 'features/transactions/transactions.dart';
 import 'features/wallet/wallet.dart';
-import 'common/constants/constants.dart';
-import 'common/models/models.dart';
-import 'common/themes/default_theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'common/models/transaction_model.dart';
-import 'features/transactions/transaction_page.dart';
 
 class App extends StatelessWidget {
   const App({super.key});

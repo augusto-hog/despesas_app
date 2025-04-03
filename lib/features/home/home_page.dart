@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> with CustomModalSheetMixin {
         showCustomModalBottomSheet(
           context: context,
           content: (_homeController.state as HomeStateError).message,
-          buttonText: 'Go to login',
+          buttonText: 'Ir para o Login',
           isDismissible: false,
           onPressed: () => Navigator.pushNamedAndRemoveUntil(
             context,

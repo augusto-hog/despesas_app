@@ -8,9 +8,9 @@ import '../../../common/features/balance/balance.dart';
 
 class BalanceCardWidget extends StatefulWidget {
   const BalanceCardWidget({
-    Key? key,
+    super.key,
     required this.controller,
-  }) : super(key: key);
+  });
 
   final BalanceController controller;
 

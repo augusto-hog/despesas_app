@@ -96,7 +96,7 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
   void _handleTransactionStateChange() {
     final state = _transactionController.state;
     switch (state.runtimeType) {
-      case TransactionStateLoading:
+      case TransactionStateLoading _:
         if (!mounted) return;
         showDialog(
           barrierDismissible: false,
@@ -104,11 +104,11 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
           builder: (context) => const CustomCircularProgressIndicator(),
         );
         break;
-      case TransactionStateSuccess:
+      case TransactionStateSuccess _:
         if (!mounted) return;
         Navigator.of(context).pop();
         break;
-      case TransactionStateError:
+      case TransactionStateError _:
         if (!mounted) return;
         showCustomSnackBar(
           context: context,

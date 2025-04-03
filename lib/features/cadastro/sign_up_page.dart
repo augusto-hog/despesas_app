@@ -40,13 +40,13 @@ class _SignUpPageState extends State<SignUpPage> with CustomModalSheetMixin {
   void _handleSignUpstateChange() {
     final state = _signUpController.state;
     switch (state.runtimeType) {
-      case SignUpStateLoading:
+      case SignUpStateLoading _:
         showDialog(
           context: context,
           builder: (context) => const CustomCircularProgressIndicator(),
         );
         break;
-      case SignUpStateSuccess:
+      case SignUpStateSuccess _:
         Navigator.pop(context);
 
         Navigator.pushReplacementNamed(
@@ -54,7 +54,7 @@ class _SignUpPageState extends State<SignUpPage> with CustomModalSheetMixin {
           NamedRoute.home,
         );
         break;
-      case SignUpStateError:
+      case SignUpStateError _:
         Navigator.pop(context);
         showCustomModalBottomSheet(
           context: context,

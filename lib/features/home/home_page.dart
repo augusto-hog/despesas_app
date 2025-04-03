@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> with CustomModalSheetMixin {
   void _handleHomeStateChange() {
     final state = _homeController.state;
     switch (state.runtimeType) {
-      case HomeStateError:
+      case HomeStateError _:
         if (!mounted) return;
 
         showCustomModalBottomSheet(

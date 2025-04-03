@@ -69,7 +69,7 @@ class _TransactionListViewState extends State<TransactionListView>
     final state = _transactionController.state;
 
     switch (state.runtimeType) {
-      case TransactionStateError:
+      case TransactionStateError _:
         if (!mounted) return;
         setState(() {
           showCustomSnackBar(

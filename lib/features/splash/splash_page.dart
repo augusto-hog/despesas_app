@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:despesas_app/common/widgets/widgets.dart';
-import 'package:despesas_app/services/sync_service/sync_controller.dart';
 import '../../common/constants/constants.dart';
 import '../../common/extensions/extensions.dart';
 import '../../services/sync_service/sync_service.dart';
@@ -52,19 +51,17 @@ class _SplashPageState extends State<SplashPage> with CustomModalSheetMixin {
     final state = _syncController.state;
 
     switch (state.runtimeType) {
-      case DownloadedDataFromServer:
+      case DownloadedDataFromServer _:
         _syncController.syncToServer();
         break;
-      case UploadedDataToServer:
+      case UploadedDataToServer _:
         Navigator.pushReplacementNamed(
           context,
           NamedRoute.home,
         );
         break;
-      case SyncStateError:
-      case UploadDataToServerError:
-      case DownloadDataFromServerError:
-        showCustomModalBottomSheet(
+      case SyncStateError _:
+      showCustomModalBottomSheet(
           context: context,
           content: (state as SyncStateError).message,
           buttonText: 'Go to login',

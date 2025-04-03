@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../common/features/balance/balance.dart';
 import '../../common/features/transaction/transaction.dart';
-import '../wallet/wallet_controller.dart';
 
 import '../../common/constants/constants.dart';
 import '../../common/widgets/widgets.dart';

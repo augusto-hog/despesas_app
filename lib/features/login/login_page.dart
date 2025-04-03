@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:despesas_app/services/sync_service/sync_controller.dart';
 
 import '../../services/sync_service/sync_service.dart';
 import '../../common/constants/constants.dart';
@@ -42,16 +41,16 @@ class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
 
   void _handleSignInStateChange() {
     switch (_signInController.state.runtimeType) {
-      case LoginStateLoading:
+      case LoginStateLoading _:
         showDialog(
           context: context,
           builder: (context) => const CustomCircularProgressIndicator(),
         );
         break;
-      case LoginStateSuccess:
+      case LoginStateSuccess _:
         _syncController.syncFromServer();
         break;
-      case LoginStateError:
+      case LoginStateError _:
         Navigator.pop(context);
         showCustomModalBottomSheet(
           context: context,
@@ -64,19 +63,17 @@ class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
 
   void _handleSyncStateChange() {
     switch (_syncController.state.runtimeType) {
-      case DownloadedDataFromServer:
+      case DownloadedDataFromServer _:
         _syncController.syncToServer();
         break;
-      case UploadedDataToServer:
+      case UploadedDataToServer _:
         Navigator.pushReplacementNamed(
           context,
           NamedRoute.home,
         );
         break;
-      case SyncStateError:
-      case UploadDataToServerError:
-      case DownloadDataFromServerError:
-        Navigator.pop(context);
+      case SyncStateError _:
+      Navigator.pop(context);
         showCustomModalBottomSheet(
           context: context,
           content: (_syncController.state as SyncStateError).message,

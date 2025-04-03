@@ -1,16 +1,18 @@
-import 'package:despesas_app/common/constants/routes.dart';
-import 'package:despesas_app/features/cadastro/sign_up_page.dart';
-import 'package:despesas_app/features/home/home_page_view.dart';
-import 'package:despesas_app/features/login/login_page.dart';
-import 'package:despesas_app/features/onboarding/onboarding_page.dart';
-import 'package:despesas_app/features/profile/profile_page.dart';
-import 'package:despesas_app/features/splash/splash_page.dart';
-import 'package:despesas_app/features/stats/stats_page.dart';
-import 'package:despesas_app/features/wallet/wallet_page.dart';
 import 'package:flutter/material.dart';
+import 'features/home/home.dart';
+import 'features/onboarding/onboarding.dart';
+import 'features/profile/profile.dart';
+import 'features/login/login.dart';
+import 'features/cadastro/sign_up.dart';
+import 'features/splash/splash.dart';
+import 'features/stats/stats.dart';
+import 'features/transactions/transactions.dart';
+import 'features/wallet/wallet.dart';
+import 'common/constants/constants.dart';
+import 'common/models/models.dart';
+import 'common/themes/default_theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'common/models/transaction_model.dart';
-import 'common/themes/default_theme.dart';
 import 'features/transactions/transaction_page.dart';
 
 class App extends StatelessWidget {

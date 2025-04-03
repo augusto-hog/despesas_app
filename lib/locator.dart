@@ -45,7 +45,6 @@ void setupDependencies() {
   locator.registerFactory<SplashController>(
     () => SplashController(
       secureStorageService: const SecureStorageService(),
-      syncService: locator.get<SyncService>(),
     ),
   );
 

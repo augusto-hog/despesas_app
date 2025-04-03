@@ -8,6 +8,7 @@ class Keys {
   static const onboardingAlreadyHaveAccountButton = Key('onboarding_already_have_account_button');
 
   // Sign up page
+  static const signUpListView = Key('sign_up_listview');
   static const signUpNameField = Key('sign_up_name_field');
   static const signUpEmailField = Key('sign_up_email_field');
   static const signUpPasswordField = Key('sign_up_password_field');
@@ -17,6 +18,7 @@ class Keys {
   static const signUpAlreadyHaveAccountButton = Key('sign_up_already_have_account_button');
 
   // Sign in page
+  static const signInListView = Key('sign_in_listview');
   static const signInEmailField = Key('sign_in_email_field');
   static const signInPasswordField = Key('sign_in_password_field');
   static const signInButton = Key('sign_in_button');

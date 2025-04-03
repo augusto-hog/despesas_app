@@ -62,6 +62,7 @@ class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
+        key: Keys.signInListView,
         children: [
           const SizedBox(height: 40),
           Text(

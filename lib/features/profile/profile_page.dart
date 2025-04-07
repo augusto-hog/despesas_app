@@ -59,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> with CustomModalSheetMixin {
       body: Stack(
         children: [
           const AppHeader(
-            title: 'Profile',
+            title: 'Perfil',
           ),
           Positioned(
             top: 210.h,

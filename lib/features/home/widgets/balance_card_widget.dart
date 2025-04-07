@@ -66,7 +66,7 @@ class _BalanceCardWidgetState extends State<BalanceCardWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Total Balance',
+                      'Saldo Total',
                       textScaleFactor: textScaleFactor,
                       style: AppTextStyles.mediumText16w600.apply(color: AppColors.white),
                     ),
@@ -83,7 +83,7 @@ class _BalanceCardWidgetState extends State<BalanceCardWidget> {
                           return ConstrainedBox(
                             constraints: BoxConstraints.tightFor(width: 250.0.w),
                             child: Text(
-                              '\$${widget.controller.balances.totalBalance.toStringAsFixed(2)}',
+                              'R\$ ${widget.controller.balances.totalBalance.toStringAsFixed(2)}',
                               textScaleFactor: textScaleFactor,
                               style: AppTextStyles.mediumText30.apply(color: AppColors.white),
                               overflow: TextOverflow.ellipsis,
@@ -129,7 +129,7 @@ class _BalanceCardWidgetState extends State<BalanceCardWidget> {
                     return TransactionValueWidget(
                       amount: widget.controller.balances.totalOutcome,
                       controller: widget.controller,
-                      type: TransactionType.outcome,
+                      type: TransactionType.gasto,
                     );
                   },
                 ),
@@ -142,14 +142,14 @@ class _BalanceCardWidgetState extends State<BalanceCardWidget> {
   }
 }
 
-enum TransactionType { income, outcome }
+enum TransactionType { receita, gasto }
 
 class TransactionValueWidget extends StatelessWidget {
   const TransactionValueWidget({
     super.key,
     required this.amount,
     required this.controller,
-    this.type = TransactionType.income,
+    this.type = TransactionType.receita,
   });
   final BalanceController controller;
   final double amount;
@@ -173,7 +173,7 @@ class TransactionValueWidget extends StatelessWidget {
             ),
           ),
           child: Icon(
-            type == TransactionType.income ? Icons.arrow_upward : Icons.arrow_downward,
+            type == TransactionType.receita ? Icons.arrow_upward : Icons.arrow_downward,
             color: AppColors.white,
             size: iconSize,
           ),
@@ -184,7 +184,7 @@ class TransactionValueWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              type == TransactionType.income ? 'Income' : 'Expense',
+              type == TransactionType.receita ? 'Receita' : 'Gastos',
               textScaleFactor: textScaleFactor,
               style: AppTextStyles.mediumText16w500.apply(color: AppColors.white),
             ),
@@ -201,7 +201,7 @@ class TransactionValueWidget extends StatelessWidget {
                   return ConstrainedBox(
                     constraints: BoxConstraints.tightFor(width: 120.0.w),
                     child: Text(
-                      '\$${amount.toStringAsFixed(2)}',
+                      'R\$ ${amount.toStringAsFixed(2)}',
                       textScaleFactor: textScaleFactor,
                       style: AppTextStyles.mediumText20.apply(color: AppColors.white),
                       overflow: TextOverflow.ellipsis,

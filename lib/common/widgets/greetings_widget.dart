@@ -1,11 +1,24 @@
 import 'package:despesas_app/common/constants/app_colors.dart';
 import 'package:despesas_app/common/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import '../extensions/extensions.dart';
+import 'package:despesas_app/locator.dart';
+import 'package:despesas_app/services/services.dart';
 
 class GreetingsWidget extends StatelessWidget {
-  const GreetingsWidget({
-    super.key
-  });
+  const GreetingsWidget({super.key});
+
+  String get _greeting {
+    final hour = DateTime.now().hour;
+
+    if (hour < 12) {
+      return 'Good morning,';
+    } else if (hour < 18) {
+      return 'Good afternoon,';
+    } else {
+      return 'Good evening,';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,15 +28,14 @@ class GreetingsWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Olá,',
+          _greeting,
           textScaleFactor: textScaleFactor,
           style: AppTextStyles.smallText.apply(color: AppColors.white),
         ),
         Text(
-          'Augusto Gomes',
+          (locator.get<UserDataService>().userData.name ?? '').capitalize().firstWord,
           textScaleFactor: textScaleFactor,
-          style:
-              AppTextStyles.mediumText20.apply(color: AppColors.white),
+          style: AppTextStyles.mediumText20.apply(color: AppColors.white),
         ),
       ],
     );

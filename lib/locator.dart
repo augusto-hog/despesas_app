@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 
 import 'common/features/balance/balance.dart';
 import 'common/features/transaction/transaction.dart';
@@ -43,7 +44,10 @@ void setupDependencies() {
     ),
   );
 
-  locator.registerFactory<UserDataService>(() => UserDataServiceImpl(firebaseAuth: FirebaseAuth.instance));
+  locator.registerFactory<UserDataService>(() => UserDataServiceImpl(
+        firebaseAuth: FirebaseAuth.instance,
+        firebaseFunctions: FirebaseFunctions.instance,
+      ));
 
   //Register Repositories
 
@@ -79,6 +83,7 @@ void setupDependencies() {
   locator.registerLazySingleton<HomeController>(
     () => HomeController(
       transactionRepository: locator.get<TransactionRepository>(),
+      userDataService: locator.get<UserDataService>(),
     ),
   );
 

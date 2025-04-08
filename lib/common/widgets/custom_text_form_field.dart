@@ -19,6 +19,10 @@ class CustomTextFormField extends StatefulWidget {
   final String? Function(String?)? validator;
   final GestureTapCallback? onTap;
   final bool readOnly;
+  final FocusNode? focusNode;
+  final ValueSetter<PointerEvent>? onTapOutside;
+
+  final VoidCallback? onEditingComplete;
 
   const CustomTextFormField({
     super.key,
@@ -37,6 +41,9 @@ class CustomTextFormField extends StatefulWidget {
     this.validator,
     this.onTap,
     this.readOnly = false,
+    this.focusNode,
+    this.onTapOutside,
+    this.onEditingComplete,
   });
 
   @override
@@ -63,8 +70,16 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     return Padding(
       padding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       child: TextFormField(
+        focusNode: widget.focusNode,
         readOnly: widget.readOnly,
         onTap: widget.onTap,
+        onEditingComplete: widget.onEditingComplete,
+        onTapOutside: widget.onTapOutside ??
+            (_) {
+              if (FocusScope.of(context).hasFocus) {
+                FocusScope.of(context).unfocus();
+              }
+            },
         onChanged: (value) {
           if (value.length == 1) {
             setState(() {

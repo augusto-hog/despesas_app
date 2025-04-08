@@ -27,6 +27,7 @@ class _HomePageState extends State<HomePage> with CustomModalSheetMixin {
   void initState() {
     super.initState();
 
+    _homeController.getUserData();
     _homeController.getLatestTransactions();
     _balanceController.getBalances();
 

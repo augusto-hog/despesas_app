@@ -1,3 +1,5 @@
+import 'package:despesas_app/services/services.dart';
+
 import '../../common/models/models.dart';
 import 'package:flutter/material.dart';
 
@@ -6,14 +8,19 @@ import 'home_state.dart';
 
 class HomeController extends ChangeNotifier {
   HomeController({
-    required this.transactionRepository,
-  });
+    required TransactionRepository transactionRepository,
+    required UserDataService userDataService,
+  })  : _userDataService = userDataService,
+        _transactionRepository = transactionRepository;
 
-  final TransactionRepository transactionRepository;
+  final TransactionRepository _transactionRepository;
+  final UserDataService _userDataService;
 
   HomeState _state = HomeStateInitial();
 
   HomeState get state => _state;
+
+  UserModel get userData => _userDataService.userData;
 
   late PageController _pageController;
   PageController get pageController => _pageController;
@@ -33,7 +40,7 @@ class HomeController extends ChangeNotifier {
   Future<void> getLatestTransactions() async {
     _changeState(HomeStateLoading());
 
-    final result = await transactionRepository.getTransactions(
+    final result = await _transactionRepository.getTransactions(
       limit: 5,
       latest: true,
     );
@@ -45,6 +52,15 @@ class HomeController extends ChangeNotifier {
 
         _changeState(HomeStateSuccess());
       },
+    );
+  }
+
+  Future<void> getUserData() async {
+    final result = await _userDataService.getUserData();
+
+    result.fold(
+      (error) => _changeState(HomeStateError(message: error.message)),
+      (_) => null,
     );
   }
 }

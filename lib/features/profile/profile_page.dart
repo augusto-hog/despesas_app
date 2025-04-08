@@ -1,5 +1,6 @@
 import 'package:despesas_app/common/extensions/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:despesas_app/common/utils/utils.dart';
 
 import '../../common/constants/constants.dart';
 import '../../common/widgets/widgets.dart';
@@ -8,6 +9,9 @@ import '../../services/services.dart';
 import 'profile_controller.dart';
 import 'profile_state.dart';
 
+part 'widgets/profile_change_name_widget.dart';
+part 'widgets/profile_change_password_widget.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -15,7 +19,7 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> with CustomModalSheetMixin {
+class _ProfilePageState extends State<ProfilePage> with CustomModalSheetMixin, CustomSnackBar {
   final _profileController = locator.get<ProfileController>();
 
   @override
@@ -34,28 +38,57 @@ class _ProfilePageState extends State<ProfilePage> with CustomModalSheetMixin {
   void _handleProfileStateChange() {
     final state = (_profileController.state);
 
+    if (!mounted) return;
+
     switch (state.runtimeType) {
       case ProfileStateError:
         if (!mounted) return;
 
-        showCustomModalBottomSheet(
-          context: context,
-          content: (_profileController.state as ProfileStateError).message,
-          buttonText: 'Ir para o login',
-          isDismissible: false,
-          onPressed: () => Navigator.pushNamedAndRemoveUntil(
-            context,
-            NamedRoute.login,
-            ModalRoute.withName(NamedRoute.initial),
-          ),
-        );
+        if (_profileController.reauthRequired) {
+          showCustomModalBottomSheet(
+            context: context,
+            content: (_profileController.state as ProfileStateError).message,
+            buttonText: 'Go to login',
+            isDismissible: false,
+            onPressed: () => Navigator.pushNamedAndRemoveUntil(
+              context,
+              NamedRoute.login,
+              ModalRoute.withName(NamedRoute.initial),
+            ),
+          );
+        }
+
+        if (_profileController.showChangeName || _profileController.showChangePassword) {
+          showCustomSnackBar(
+            context: context,
+            text: (_profileController.state as ProfileStateError).message,
+            type: SnackBarType.error,
+          );
+        }
         break;
+
+      case ProfileStateSuccess:
+        if (_profileController.showNameUpdateMessage) {
+          showCustomSnackBar(
+            context: context,
+            text: 'Name updated successfully',
+            type: SnackBarType.success,
+          );
+        }
+        if (_profileController.showPasswordUpdateMessage) {
+          showCustomSnackBar(
+            context: context,
+            text: 'Password updated successfully',
+            type: SnackBarType.success,
+          );
+        }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           const AppHeader(
@@ -76,25 +109,24 @@ class _ProfilePageState extends State<ProfilePage> with CustomModalSheetMixin {
                 AnimatedBuilder(
                   animation: _profileController,
                   builder: (context, child) {
-                    if (_profileController.state is ProfileStateSuccess) {
-                      final user = (_profileController.state as ProfileStateSuccess).user;
-                      return Column(
-                        children: [
-                          Text(
-                            user.name!,
-                            style: AppTextStyles.mediumText20,
-                          ),
-                          SizedBox(height: 4.h),
-                          Text(
-                            user.email!,
-                            style: AppTextStyles.smallText.apply(
-                              color: AppColors.green,
-                            ),
-                          ),
-                        ],
-                      );
+                    if (_profileController.state is ProfileStateLoading) {
+                      return const CustomCircularProgressIndicator(color: AppColors.green);
                     }
-                    return const SizedBox.shrink();
+                    return Column(
+                      children: [
+                        Text(
+                          (_profileController.userData.name ?? '').capitalize(),
+                          style: AppTextStyles.mediumText20,
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          _profileController.userData.email ?? '',
+                          style: AppTextStyles.smallText.apply(
+                            color: AppColors.green,
+                          ),
+                        ),
+                      ],
+                    );
                   },
                 ),
               ],
@@ -106,65 +138,90 @@ class _ProfilePageState extends State<ProfilePage> with CustomModalSheetMixin {
             right: 32,
             bottom: 0,
             child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.person,
-                      color: AppColors.green,
-                    ),
-                    label: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Mudar nome',
-                        style: AppTextStyles.mediumText16w500.apply(color: AppColors.green),
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                  ),
-                  TextButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.lock_person_rounded,
-                      color: AppColors.green,
-                    ),
-                    label: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Mudar senha',
-                        style: AppTextStyles.mediumText16w500.apply(color: AppColors.green),
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                  ),
-                  TextButton.icon(
-                    onPressed: () async {
-                      await locator.get<AuthService>().signOut();
-                      await locator.get<SecureStorageService>().deleteAll();
-                      await locator.get<DatabaseService>().deleteDB;
-                      if (!mounted) return;
+              child: ListenableBuilder(
+                listenable: _profileController,
+                builder: (context, child) {
+                  return AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    switchInCurve: Curves.easeIn,
+                    switchOutCurve: Curves.easeOut,
+                    child: _profileController.showChangeName
+                        ? _ProfileChangeNameWidget(
+                            key: const ValueKey('change-name'),
+                            profileController: _profileController,
+                          )
+                        : _profileController.showChangePassword
+                            ? _ProfileChangePasswordWidget(
+                                key: const ValueKey('change-password'),
+                                profileController: _profileController,
+                              )
+                            : Column(
+                                key: UniqueKey(),
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  TextButton.icon(
+                                    onPressed: () {
+                                      _profileController.onChangeNameTapped();
+                                    },
+                                    icon: const Icon(
+                                      Icons.person,
+                                      color: AppColors.green,
+                                    ),
+                                    label: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        'Change name',
+                                        style: AppTextStyles.mediumText16w500.apply(color: AppColors.green),
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                  ),
+                                  TextButton.icon(
+                                    onPressed: () {
+                                      _profileController.onChangePasswordTapped();
+                                    },
+                                    icon: const Icon(
+                                      Icons.lock_person_rounded,
+                                      color: AppColors.green,
+                                    ),
+                                    label: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        'Change password',
+                                        style: AppTextStyles.mediumText16w500.apply(color: AppColors.green),
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                  ),
+                                  TextButton.icon(
+                                    onPressed: () async {
+                                      await locator.get<AuthService>().signOut();
+                                      await locator.get<SecureStorageService>().deleteAll();
+                                      await locator.get<DatabaseService>().deleteDB;
+                                      if (!mounted) return;
 
-                      Navigator.popUntil(
-                        context,
-                        ModalRoute.withName(NamedRoute.initial),
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.logout_outlined,
-                      color: AppColors.green,
-                    ),
-                    label: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Logout',
-                        style: AppTextStyles.mediumText16w500.apply(color: AppColors.green),
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                  ),
-                ],
+                                      Navigator.popUntil(
+                                        context,
+                                        ModalRoute.withName(NamedRoute.initial),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                      Icons.logout_outlined,
+                                      color: AppColors.green,
+                                    ),
+                                    label: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        'Logout',
+                                        style: AppTextStyles.mediumText16w500.apply(color: AppColors.green),
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                  );
+                },
               ),
             ),
           ),

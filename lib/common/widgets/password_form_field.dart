@@ -15,6 +15,10 @@ class PasswordFormField extends StatefulWidget {
   final Widget? suffixIcon;
   final String? helperText;
   final FormFieldValidator<String>? validator;
+  final FocusNode? focusNode;
+  final VoidCallback? onTap;
+  final ValueSetter<PointerEvent>? onTapOutside;
+  final VoidCallback? onEditingComplete;
 
   const PasswordFormField({
     super.key,
@@ -29,6 +33,10 @@ class PasswordFormField extends StatefulWidget {
     this.helperText,
     this.suffixIcon,
     this.validator,
+    this.focusNode,
+    this.onTap,
+    this.onTapOutside,
+    this.onEditingComplete,
   });
 
   @override
@@ -41,6 +49,15 @@ class _PasswordFormFieldState extends State<PasswordFormField> {
   @override
   Widget build(BuildContext context) {
     return CustomTextFormField(
+        onTap: widget.onTap,
+        onEditingComplete: widget.onEditingComplete,
+        focusNode: widget.focusNode,
+        onTapOutside: widget.onTapOutside ??
+            (_) {
+              if (FocusScope.of(context).hasFocus) {
+                FocusScope.of(context).unfocus();
+              }
+            },
         validator: widget.validator,
         obscureText: isHidden,
         controller: widget.controller,

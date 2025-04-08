@@ -6,12 +6,13 @@ class LoginController extends ChangeNotifier {
   LoginState _state = LoginStateInitial();
 
   LoginController({
-    required this.authService,
-    required this.secureStorageService,
-  });
+    required AuthService authService,
+    required SecureStorageService secureStorageService,
+  })  : _secureStorageService = secureStorageService,
+        _authService = authService;
 
-  final AuthService authService;
-  final SecureStorageService secureStorageService;
+  final AuthService _authService;
+  final SecureStorageService _secureStorageService;
 
   LoginState get state => _state;
 
@@ -24,13 +25,13 @@ class LoginController extends ChangeNotifier {
     _changeState(LoginStateLoading());
 
     try {
-      final result = await authService.signIn(email: email, password: password);
+      final result = await _authService.signIn(email: email, password: password);
       result.fold(
         (error) {
           _changeState(LoginStateError(error.message));
         },
         (data) async {
-          await secureStorageService.write(
+          await _secureStorageService.write(
             key: "CURRENT_USER",
             value: data.toJson(),
           );

@@ -1,6 +1,5 @@
 import 'package:despesas_app/common/extensions/extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:despesas_app/common/utils/utils.dart';
 
 import '../../common/constants/constants.dart';
 import '../../common/widgets/widgets.dart';
@@ -9,8 +8,8 @@ import '../../services/services.dart';
 import 'profile_controller.dart';
 import 'profile_state.dart';
 
-part 'widgets/profile_change_name_widget.dart';
-part 'widgets/profile_change_password_widget.dart';
+import 'widgets/profile_change_name_widget.dart';
+import 'widgets/profile_change_password_widget.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -48,7 +47,7 @@ class _ProfilePageState extends State<ProfilePage> with CustomModalSheetMixin, C
           showCustomModalBottomSheet(
             context: context,
             content: (_profileController.state as ProfileStateError).message,
-            buttonText: 'Go to login',
+            buttonText: 'Ir para o Login',
             isDismissible: false,
             onPressed: () => Navigator.pushNamedAndRemoveUntil(
               context,
@@ -71,14 +70,14 @@ class _ProfilePageState extends State<ProfilePage> with CustomModalSheetMixin, C
         if (_profileController.showNameUpdateMessage) {
           showCustomSnackBar(
             context: context,
-            text: 'Name updated successfully',
+            text: 'Nome atualizado com sucesso',
             type: SnackBarType.success,
           );
         }
         if (_profileController.showPasswordUpdateMessage) {
           showCustomSnackBar(
             context: context,
-            text: 'Password updated successfully',
+            text: 'Senha atualizada com sucesso',
             type: SnackBarType.success,
           );
         }
@@ -146,12 +145,12 @@ class _ProfilePageState extends State<ProfilePage> with CustomModalSheetMixin, C
                     switchInCurve: Curves.easeIn,
                     switchOutCurve: Curves.easeOut,
                     child: _profileController.showChangeName
-                        ? _ProfileChangeNameWidget(
+                        ? ProfileChangeNameWidget(
                             key: const ValueKey('change-name'),
                             profileController: _profileController,
                           )
                         : _profileController.showChangePassword
-                            ? _ProfileChangePasswordWidget(
+                            ? ProfileChangePasswordWidget(
                                 key: const ValueKey('change-password'),
                                 profileController: _profileController,
                               )
@@ -170,7 +169,7 @@ class _ProfilePageState extends State<ProfilePage> with CustomModalSheetMixin, C
                                     label: Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        'Change name',
+                                        'Alterar nome',
                                         style: AppTextStyles.mediumText16w500.apply(color: AppColors.green),
                                         textAlign: TextAlign.start,
                                       ),
@@ -187,7 +186,7 @@ class _ProfilePageState extends State<ProfilePage> with CustomModalSheetMixin, C
                                     label: Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        'Change password',
+                                        'Alterar senha',
                                         style: AppTextStyles.mediumText16w500.apply(color: AppColors.green),
                                         textAlign: TextAlign.start,
                                       ),
@@ -212,7 +211,7 @@ class _ProfilePageState extends State<ProfilePage> with CustomModalSheetMixin, C
                                     label: Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        'Logout',
+                                        'Sair',
                                         style: AppTextStyles.mediumText16w500.apply(color: AppColors.green),
                                         textAlign: TextAlign.start,
                                       ),

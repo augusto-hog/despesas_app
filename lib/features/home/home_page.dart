@@ -27,7 +27,6 @@ class _HomePageState extends State<HomePage> with CustomModalSheetMixin {
   void initState() {
     super.initState();
 
-    _homeController.getUserData();
     _homeController.getLatestTransactions();
     _balanceController.getBalances();
 
@@ -53,8 +52,8 @@ class _HomePageState extends State<HomePage> with CustomModalSheetMixin {
           isDismissible: false,
           onPressed: () => Navigator.pushNamedAndRemoveUntil(
             context,
-            NamedRoute.login,
-            ModalRoute.withName(NamedRoute.initial),
+            NamedRoute.initial,
+            (route) => false,
           ),
         );
         break;
@@ -86,7 +85,7 @@ class _HomePageState extends State<HomePage> with CustomModalSheetMixin {
                       ),
                       GestureDetector(
                         onTap: () {
-                          _homeController.pageController.jumpToPage(2);
+                          _homeController.pageController.navigateTo(BottomAppBarItem.carteira);
                         },
                         child: const Text(
                           'Ver tudo',
@@ -115,7 +114,6 @@ class _HomePageState extends State<HomePage> with CustomModalSheetMixin {
                         if (_homeController.state is HomeStateSuccess && _homeController.transactions.isNotEmpty) {
                           return TransactionListView(
                             transactionList: _homeController.transactions,
-                            itemCount: _homeController.transactions.length,
                             onChange: () {
                               _homeController.getLatestTransactions();
                               _balanceController.getBalances();

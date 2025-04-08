@@ -35,29 +35,15 @@ class TransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
-  Future<DataResult<List<TransactionModel>>> getTransactions({
-    int? limit,
-    int? offset,
-    bool latest = false,
-  }) async {
-    final params = {
-      'limit': limit,
-      'offset': offset,
-      'skip_status': SyncStatus.delete.name,
-    };
-
+  Future<DataResult<List<TransactionModel>>> getLatestTransactions() async {
     try {
       final cachedTransactionsResponse = await databaseService.read(
         path: TransactionRepository.transactionsPath,
-        params: latest
-            ? {
-                ...params,
-                'order_by': 'date desc',
-              }
-            : {
-                ...params,
-                'order_by': 'date asc',
-              },
+        params: {
+          'limit': 5,
+          'skip_status': SyncStatus.delete.name,
+          'order_by': 'date desc',
+        },
       );
 
       final parsedcachedTransactions = List.from(cachedTransactionsResponse['data']);
@@ -172,6 +158,34 @@ class TransactionRepositoryImpl implements TransactionRepository {
       return DataResult.success(
         BalancesModel.fromMap(updatedBalance),
       );
+    } on Failure catch (e) {
+      return DataResult.failure(e);
+    }
+  }
+
+  @override
+  Future<DataResult<List<TransactionModel>>> getTransactionsByDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
+    try {
+      final cachedTransactionsResponse = await databaseService.read(
+        path: TransactionRepository.transactionsPath,
+        params: {
+          'skip_status': SyncStatus.delete.name,
+          'order_by': 'date asc',
+          'start_date': startDate.toIso8601String(),
+          'end_date': endDate.toIso8601String(),
+        },
+      );
+
+      final parsedcachedTransactions = List.from(cachedTransactionsResponse['data']);
+
+      final cachedTransactions = parsedcachedTransactions.map((e) => TransactionModel.fromMap(e)).toList();
+
+      // return DataResult.failure(const GeneralException());
+
+      return DataResult.success(cachedTransactions);
     } on Failure catch (e) {
       return DataResult.failure(e);
     }

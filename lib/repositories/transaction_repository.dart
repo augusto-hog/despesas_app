@@ -15,11 +15,7 @@ abstract class TransactionRepository {
 
   Future<DataResult<bool>> updateTransaction(TransactionModel transaction);
 
-  Future<DataResult<List<TransactionModel>>> getTransactions({
-    int? limit,
-    int? offset,
-    bool latest = false,
-  });
+  Future<DataResult<List<TransactionModel>>> getLatestTransactions();
 
   Future<DataResult<bool>> deleteTransaction(TransactionModel transaction);
 
@@ -28,5 +24,10 @@ abstract class TransactionRepository {
   Future<DataResult<BalancesModel>> updateBalance({
     TransactionModel? oldTransaction,
     required TransactionModel newTransaction,
+  });
+
+  Future<DataResult<List<TransactionModel>>> getTransactionsByDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
   });
 }

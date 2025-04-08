@@ -28,6 +28,7 @@ class CustomTheme {
           foregroundColor: AppColors.darkGreen,
         ),
       ),
+      tooltipTheme: const TooltipThemeData(textStyle: TextStyle(color: Colors.white)),
       tabBarTheme: const TabBarTheme(
         indicator: BoxDecoration(
           border: Border(),

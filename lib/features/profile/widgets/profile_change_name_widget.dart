@@ -1,7 +1,12 @@
-part of '../profile_page.dart';
+import 'package:flutter/material.dart';
 
-class _ProfileChangeNameWidget extends StatefulWidget {
-  const _ProfileChangeNameWidget({
+import '../../../common/constants/constants.dart';
+import '../../../common/utils/utils.dart';
+import '../../../common/widgets/widgets.dart';
+import '../profile.dart';
+
+class ProfileChangeNameWidget extends StatefulWidget {
+  const ProfileChangeNameWidget({
     super.key,
     required ProfileController profileController,
   }) : _profileController = profileController;
@@ -9,10 +14,10 @@ class _ProfileChangeNameWidget extends StatefulWidget {
   final ProfileController _profileController;
 
   @override
-  State<_ProfileChangeNameWidget> createState() => _ProfileChangeNameWidgetState();
+  State<ProfileChangeNameWidget> createState() => _ProfileChangeNameWidgetState();
 }
 
-class _ProfileChangeNameWidgetState extends State<_ProfileChangeNameWidget> with CustomSnackBar {
+class _ProfileChangeNameWidgetState extends State<ProfileChangeNameWidget> with CustomSnackBar {
   final _textEditingController = TextEditingController();
   final _focusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
@@ -56,7 +61,7 @@ class _ProfileChangeNameWidgetState extends State<_ProfileChangeNameWidget> with
             inputFormatters: [UpperCaseTextInputFormatter()],
             controller: _textEditingController,
             focusNode: _focusNode,
-            labelText: 'New name',
+            labelText: 'Novo nome',
             onTapOutside: (_) => _focusNode.unfocus(),
             validator: (_) => Validator.validateName(_textEditingController.text),
             onEditingComplete: widget._profileController.canSave ? onNewNameSavePressed : null,
@@ -74,7 +79,7 @@ class _ProfileChangeNameWidgetState extends State<_ProfileChangeNameWidget> with
                   widget._profileController.toggleButtonTap(false);
                 },
                 child: Text(
-                  'Cancel',
+                  'Cancelar',
                   style: AppTextStyles.mediumText16w500.apply(color: AppColors.green),
                 ),
               ),
@@ -84,7 +89,7 @@ class _ProfileChangeNameWidgetState extends State<_ProfileChangeNameWidget> with
               child: TextButton(
                 onPressed: widget._profileController.canSave ? onNewNameSavePressed : null,
                 child: Text(
-                  'Save',
+                  'Salvar',
                   style: AppTextStyles.mediumText16w500.apply(color: AppColors.green),
                 ),
               ),

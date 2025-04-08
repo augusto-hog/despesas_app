@@ -11,12 +11,21 @@ class AppHeader extends StatefulWidget {
     this.suffixOption = false,
     this.preffixOption = false,
     this.onPressed,
-  });
+  }) : _withBackground = true;
+
+  const AppHeader.noBackground({
+    super.key,
+    this.title,
+    this.suffixOption = false,
+    this.preffixOption = false,
+    this.onPressed,
+  }) : _withBackground = false;
 
   final String? title;
   final bool suffixOption;
   final bool preffixOption;
   final VoidCallback? onPressed;
+  final bool _withBackground;
 
   @override
   State<AppHeader> createState() => _AppHeaderState();
@@ -28,7 +37,7 @@ class _AppHeaderState extends State<AppHeader> {
           textAlign: TextAlign.center,
           widget.title!,
           style: AppTextStyles.mediumText18.apply(
-            color: AppColors.white,
+            color: widget._withBackground ? AppColors.white : AppColors.blackGrey,
           ),
         )
       : const Row(
@@ -43,24 +52,25 @@ class _AppHeaderState extends State<AppHeader> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Positioned(
-          left: 0,
-          right: 0,
-          child: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: AppColors.greenGradient,
+        if (widget._withBackground)
+          Positioned(
+            left: 0,
+            right: 0,
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: AppColors.greenGradient,
+                ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.elliptical(500, 30),
+                  bottomRight: Radius.elliptical(500, 30),
+                ),
               ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.elliptical(500, 30),
-                bottomRight: Radius.elliptical(500, 30),
-              ),
+              height: 287.h,
             ),
-            height: 287.h,
           ),
-        ),
         Positioned(
           left: 24.0.w,
           right: 24.0.w,

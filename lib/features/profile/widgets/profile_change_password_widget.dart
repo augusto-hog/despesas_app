@@ -1,7 +1,11 @@
-part of '../profile_page.dart';
+import 'package:flutter/material.dart';
+import '../../../common/constants/constants.dart';
+import '../../../common/utils/utils.dart';
+import '../../../common/widgets/widgets.dart';
+import '../profile.dart';
 
-class _ProfileChangePasswordWidget extends StatefulWidget {
-  const _ProfileChangePasswordWidget({
+class ProfileChangePasswordWidget extends StatefulWidget {
+  const ProfileChangePasswordWidget({
     super.key,
     required ProfileController profileController,
   }) : _profileController = profileController;
@@ -9,10 +13,10 @@ class _ProfileChangePasswordWidget extends StatefulWidget {
   final ProfileController _profileController;
 
   @override
-  State<_ProfileChangePasswordWidget> createState() => _ProfileChangePasswordWidgetState();
+  State<ProfileChangePasswordWidget> createState() => _ProfileChangePasswordWidgetState();
 }
 
-class _ProfileChangePasswordWidgetState extends State<_ProfileChangePasswordWidget> with CustomSnackBar {
+class _ProfileChangePasswordWidgetState extends State<ProfileChangePasswordWidget> with CustomSnackBar {
   final _textEditingController = TextEditingController();
   final _focusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
@@ -53,7 +57,7 @@ class _ProfileChangePasswordWidgetState extends State<_ProfileChangePasswordWidg
           child: PasswordFormField(
             controller: _textEditingController,
             focusNode: _focusNode,
-            labelText: 'New password',
+            labelText: 'Nova senha',
             onTapOutside: (_) => _focusNode.unfocus(),
             validator: (_) => Validator.validatePassword(_textEditingController.text),
             onEditingComplete: widget._profileController.canSave ? onNewPasswordSavePressed : null,
@@ -70,7 +74,7 @@ class _ProfileChangePasswordWidgetState extends State<_ProfileChangePasswordWidg
                   widget._profileController.toggleButtonTap(false);
                 },
                 child: Text(
-                  'Cancel',
+                  'Cancelar',
                   style: AppTextStyles.mediumText16w500.apply(color: AppColors.green),
                 ),
               ),
@@ -80,7 +84,7 @@ class _ProfileChangePasswordWidgetState extends State<_ProfileChangePasswordWidg
               child: TextButton(
                 onPressed: widget._profileController.canSave ? onNewPasswordSavePressed : null,
                 child: Text(
-                  'Save',
+                  'Salvar',
                   style: AppTextStyles.mediumText16w500.apply(color: AppColors.green),
                 ),
               ),

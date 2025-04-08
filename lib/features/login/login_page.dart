@@ -69,7 +69,11 @@ class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
         _syncController.syncToServer();
         break;
       case UploadedDataToServer:
-        Navigator.pushReplacementNamed(context, NamedRoute.home);
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          NamedRoute.home,
+          (route) => false,
+        );
         break;
       case SyncStateError:
       case UploadDataToServerError:

@@ -1,4 +1,4 @@
-import 'package:despesas_app/common/models/models.dart';
+import '../../common/models/models.dart';
 
 abstract class ProfileState {}
 

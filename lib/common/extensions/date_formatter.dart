@@ -29,4 +29,8 @@ extension DateTimeFormatter on DateTime {
       return ("${toIso8601String().replaceAll('Z', '+')}${duration.inHours.toString().padLeft(2, '0')}:${(duration.inMinutes - (duration.inHours * 60)).toString().padLeft(2, '0')}");
     }
   }
+
+  String get yMd {
+    return DateFormat('yyyy-MM-dd').format(this);
+  }
 }

@@ -1,9 +1,8 @@
-import 'package:despesas_app/services/services.dart';
-
-import '../../common/models/models.dart';
 import 'package:flutter/material.dart';
 
-import '../../repositories/transaction_repository.dart';
+import '../../common/models/models.dart';
+import '../../repositories/repositories.dart';
+import '../../services/services.dart';
 import 'home_state.dart';
 
 class HomeController extends ChangeNotifier {
@@ -40,10 +39,7 @@ class HomeController extends ChangeNotifier {
   Future<void> getLatestTransactions() async {
     _changeState(HomeStateLoading());
 
-    final result = await _transactionRepository.getTransactions(
-      limit: 5,
-      latest: true,
-    );
+    final result = await _transactionRepository.getLatestTransactions();
 
     result.fold(
       (error) => _changeState(HomeStateError(message: error.message)),

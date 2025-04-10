@@ -1,3 +1,4 @@
+import 'features/stats/stats_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -112,5 +113,10 @@ void setupDependencies() {
     ),
   );
 
-  locator.registerFactory<ProfileController>(() => ProfileController(userDataService: locator.get<UserDataService>()));
+  locator.registerFactory<ProfileController>(
+    () => ProfileController(userDataService: locator.get<UserDataService>()),
+  );
+
+  locator.registerLazySingleton<StatsController>(
+      () => StatsController(transactionRepository: locator.get<TransactionRepository>()));
 }

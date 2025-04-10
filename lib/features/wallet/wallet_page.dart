@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../common/extensions/sizes.dart';
 import 'package:intl/intl.dart';
 import '../../locator.dart';
 import '../home/home_controller.dart';
@@ -27,7 +26,7 @@ class _WalletPageState extends State<WalletPage> with TickerProviderStateMixin, 
   void initState() {
     super.initState();
     _optionsTabController = TabController(
-      length: 2,
+      length: 1,
       vsync: this,
     );
     _monthsTabController = TabController(
@@ -154,21 +153,6 @@ class _WalletPageState extends State<WalletPage> with TickerProviderStateMixin, 
                                 ),
                                 child: Text(
                                   'Transações',
-                                  style: AppTextStyles.mediumText16w500.apply(color: AppColors.darkGrey),
-                                ),
-                              ),
-                            ),
-                            Tab(
-                              child: Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: _optionsTabController.index == 1 ? AppColors.darkWhite : AppColors.white,
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(24.0),
-                                  ),
-                                ),
-                                child: Text(
-                                  'Contas Pendentes',
                                   style: AppTextStyles.mediumText16w500.apply(color: AppColors.darkGrey),
                                 ),
                               ),

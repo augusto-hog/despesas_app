@@ -7,6 +7,7 @@ import '../../common/constants/constants.dart';
 import '../../common/widgets/widgets.dart';
 import '../../locator.dart';
 import '../profile/profile.dart';
+import '../stats/stats_controller.dart';
 import '../stats/stats_page.dart';
 import '../wallet/wallet.dart';
 import 'home_controller.dart';
@@ -23,6 +24,7 @@ class _HomePageViewState extends State<HomePageView> {
   final homeController = locator.get<HomeController>();
   final walletController = locator.get<WalletController>();
   final balanceController = locator.get<BalanceController>();
+  final statsController = locator.get<StatsController>();
 
   @override
   void initState() {
@@ -59,11 +61,16 @@ class _HomePageViewState extends State<HomePageView> {
         onPressed: () async {
           final result = await Navigator.pushNamed(context, '/transaction');
           if (result != null) {
-            if (homeController.pageController.page == 0) {
-              homeController.getLatestTransactions();
-            }
-            if (homeController.pageController.page == 2) {
-              walletController.getTransactionsByDateRange();
+            switch (homeController.pageController.page) {
+              case 0:
+                homeController.getLatestTransactions();
+                break;
+              case 1:
+                statsController.getTrasactionsByPeriod();
+                break;
+              case 2:
+                walletController.getTransactionsByDateRange();
+                break;
             }
             balanceController.getBalances();
           }

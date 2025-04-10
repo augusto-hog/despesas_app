@@ -12,17 +12,17 @@ class GreetingsWidget extends StatelessWidget {
     final hour = DateTime.now().hour;
 
     if (hour < 12) {
-      return 'Bom dia,';
+      return 'Bom dia';
     } else if (hour < 18) {
-      return 'Boa Tarde,';
+      return 'Boa Tarde';
     } else {
-      return 'Boa Noite,';
+      return 'Boa Noite';
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    double textScaleFactor = MediaQuery.of(context).size.width < 360 ? 0.7 : 1.0;
+    double textScaleFactor = MediaQuery.of(context).size.width < 360 ? 0.7 : 1.1;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

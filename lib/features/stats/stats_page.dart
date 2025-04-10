@@ -128,7 +128,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
                                   getTooltipItems: (touchedSpots) {
                                     return touchedSpots.map((e) {
                                       return LineTooltipItem(
-                                        '\$${e.y.toStringAsFixed(2)}',
+                                        'R\$${e.y.toStringAsFixed(2)}',
                                         AppTextStyles.smallText.copyWith(
                                           color: AppColors.greenOne,
                                         ),

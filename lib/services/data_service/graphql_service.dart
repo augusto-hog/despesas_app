@@ -1,5 +1,6 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
 
+import '../../common/constants/environment.dart';
 import '../../common/data/data.dart';
 import '../services.dart';
 
@@ -15,7 +16,7 @@ class GraphQLService implements DataService<Map<String, dynamic>> {
 
   Future<GraphQLService> init() async {
     final HttpLink httpLink = HttpLink(
-      'https://excited-earwig-40.hasura.app/v1/graphql',
+      const Environment().graphqlEndpoint,
     );
 
     final AuthLink authLink = AuthLink(

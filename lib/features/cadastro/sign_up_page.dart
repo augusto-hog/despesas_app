@@ -94,6 +94,19 @@ class _SignUpPageState extends State<SignUpPage> with CustomModalSheetMixin {
     }
   }
 
+  void _onSignUpButtonPressed() {
+    final valid = _formKey.currentState != null && _formKey.currentState!.validate();
+    if (valid) {
+      _signUpController.signUp(
+        name: _nameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+    } else {
+      log("erro ao logar");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,68 +133,53 @@ class _SignUpPageState extends State<SignUpPage> with CustomModalSheetMixin {
             ),
           ),
           Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  CustomTextFormField(
-                    key: Keys.signUpNameField,
-                    controller: _nameController,
-                    labelText: "seu nome",
-                    hintText: "Digite seu nome",
-                    inputFormatters: [
-                      UpperCaseTextInputFormatter(),
-                    ],
-                    validator: Validator.validateName,
+            key: _formKey,
+            child: Column(
+              children: [
+                CustomTextFormField(
+                  key: Keys.signUpNameField,
+                  controller: _nameController,
+                  labelText: "seu nome",
+                  hintText: "Digite seu nome",
+                  inputFormatters: [
+                    UpperCaseTextInputFormatter(),
+                  ],
+                  validator: Validator.validateName,
+                ),
+                CustomTextFormField(
+                  key: Keys.signUpEmailField,
+                  controller: _emailController,
+                  labelText: "seu Email",
+                  hintText: "email@email.com",
+                  validator: Validator.validateEmail,
+                ),
+                PasswordFormField(
+                  key: Keys.signUpPasswordField,
+                  controller: _passwordController,
+                  labelText: "escolha sua senha",
+                  hintText: "********",
+                  helperText: "Mínimo de 8 caracteres, 1 letra maiuscula, 1 número e 1 simbolo",
+                  validator: Validator.validatePassword,
+                ),
+                PasswordFormField(
+                  key: Keys.signUpConfirmPasswordField,
+                  labelText: "Confirme sua senha",
+                  hintText: "********",
+                  validator: (value) => Validator.validateConfirmPassword(
+                    value,
+                    _passwordController.text,
                   ),
-                  CustomTextFormField(
-                    key: Keys.signUpEmailField,
-                    controller: _emailController,
-                    labelText: "seu Email",
-                    hintText: "email@email.com",
-                    validator: Validator.validateEmail,
-                  ),
-                  PasswordFormField(
-                    key: Keys.signUpPasswordField,
-                    controller: _passwordController,
-                    labelText: "escolha sua senha",
-                    hintText: "********",
-                    helperText: "Mínimo de 8 caracteres, 1 letra maiuscula, 1 número e 1 simbolo",
-                    validator: Validator.validatePassword,
-                  ),
-                  PasswordFormField(
-                    key: Keys.signUpConfirmPasswordField,
-                    labelText: "Confirme sua senha",
-                    hintText: "********",
-                    validator: (value) => Validator.validateConfirmPassword(
-                      value,
-                      _passwordController.text,
-                    ),
-                  ),
-                ],
-              )),
+                  onEditingComplete: _onSignUpButtonPressed,
+                ),
+              ],
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 32.0, right: 20.0, top: 16.0, bottom: 4.0),
             child: PrimaryButton(
               key: Keys.signUpButton,
               text: 'Cadastre-se',
-              onPressed: () async {
-                final valid = _formKey.currentState != null && _formKey.currentState!.validate();
-                if (valid) {
-                  try {
-                    await _signUpController.signUp(
-                      name: _nameController.text,
-                      email: _emailController.text,
-                      password: _passwordController.text,
-                    );
-                    log('Usuário cadastrado com sucesso');
-                    // Aqui você pode adicionar um redirecionamento ou mensagem de sucesso
-                  } catch (e) {
-                    log('Erro ao cadastrar usuário: $e'); // Log do erro
-                  }
-                } else {
-                  log('Formulário inválido');
-                }
-              },
+              onPressed: _onSignUpButtonPressed,
             ),
           ),
           MultiTextButton(

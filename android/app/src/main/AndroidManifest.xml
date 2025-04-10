@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dev.augusto.despesas.despesas_app">
     <application
-        android:label="despesas_app"
+        android:label="PoupeUp"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

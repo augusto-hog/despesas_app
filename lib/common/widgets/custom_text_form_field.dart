@@ -73,7 +73,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         focusNode: widget.focusNode,
         readOnly: widget.readOnly,
         onTap: widget.onTap,
-        onEditingComplete: widget.onEditingComplete,
+        onEditingComplete: widget.onEditingComplete ??
+            () {
+              FocusScope.of(context).nextFocus();
+            },
         onTapOutside: widget.onTapOutside ??
             (_) {
               if (FocusScope.of(context).hasFocus) {

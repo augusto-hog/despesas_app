@@ -1,12 +1,14 @@
-import 'package:despesas_app/common/constants/app_colors.dart';
-import 'package:despesas_app/common/constants/app_text_styles.dart';
-import 'package:flutter/material.dart';
-import '../extensions/extensions.dart';
+import 'package:despesas_app/features/home/home.dart';
 import 'package:despesas_app/locator.dart';
-import 'package:despesas_app/services/services.dart';
+import 'package:flutter/material.dart';
+
+import '../constants/constants.dart';
+import '../extensions/extensions.dart';
 
 class GreetingsWidget extends StatelessWidget {
-  const GreetingsWidget({super.key});
+  const GreetingsWidget({
+    super.key,
+  });
 
   String get _greeting {
     final hour = DateTime.now().hour;
@@ -14,15 +16,15 @@ class GreetingsWidget extends StatelessWidget {
     if (hour < 12) {
       return 'Bom dia';
     } else if (hour < 18) {
-      return 'Boa Tarde';
+      return 'Boa tarde';
     } else {
-      return 'Boa Noite';
+      return 'Boa noite';
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    double textScaleFactor = MediaQuery.of(context).size.width < 360 ? 0.7 : 1.1;
+    double textScaleFactor = MediaQuery.of(context).size.width < 360 ? 0.7 : 1.0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,7 +35,7 @@ class GreetingsWidget extends StatelessWidget {
           style: AppTextStyles.smallText.apply(color: AppColors.white),
         ),
         Text(
-          (locator.get<UserDataService>().userData.name ?? '').capitalize().firstWord,
+          (locator.get<HomeController>().userData.name ?? '').capitalize().firstWord,
           textScaleFactor: textScaleFactor,
           style: AppTextStyles.mediumText20.apply(color: AppColors.white),
         ),

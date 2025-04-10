@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import '../../services/sync_service/sync_service.dart';
 import '../../common/constants/constants.dart';
@@ -93,6 +95,18 @@ class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
     }
   }
 
+  void _onSignInButtonPressed() {
+    final valid = _formKey.currentState != null && _formKey.currentState!.validate();
+    if (valid) {
+      _signInController.login(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+    } else {
+      log("erro ao logar");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,6 +144,7 @@ class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
                   labelText: "Sua senha",
                   hintText: "********",
                   helperText: "Mínimo de 8 caracteres, 1 letra maiúscula, 1 número e 1 símbolo",
+                  onEditingComplete: _onSignInButtonPressed,
                   validator: Validator.validatePassword,
                 ),
               ],
@@ -140,15 +155,7 @@ class _LoginPageState extends State<LoginPage> with CustomModalSheetMixin {
             child: PrimaryButton(
               key: Keys.signInButton,
               text: 'Login',
-              onPressed: () {
-                final valid = _formKey.currentState?.validate() ?? false;
-                if (valid) {
-                  _signInController.login(
-                    email: _emailController.text,
-                    password: _passwordController.text,
-                  );
-                } else {}
-              },
+              onPressed: _onSignInButtonPressed,
             ),
           ),
           MultiTextButton(

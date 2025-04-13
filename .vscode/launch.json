@@ -9,7 +9,7 @@
             "request": "launch",
             "type": "dart",
             "toolArgs": [
-                "--dart-define=GRAPHQL_ENDPOINT=https://excited-earwig-40.hasura.app/v1/graphql",
+                "--dart-define=GRAPHQL_ENDPOINT=https://excited-earwig-40.hasura.app/v1/graphql"
             ]
             
         },
@@ -19,7 +19,7 @@
             "type": "dart",
             "flutterMode": "profile",
             "toolArgs": [
-                "--dart-define=GRAPHQL_ENDPOINT=https://excited-earwig-40.hasura.app/v1/graphql",
+                "--dart-define=GRAPHQL_ENDPOINT=https://excited-earwig-40.hasura.app/v1/graphql"
             ]
         },
         {
@@ -28,7 +28,7 @@
             "type": "dart",
             "flutterMode": "release",
             "toolArgs": [
-                "--dart-define=GRAPHQL_ENDPOINT=https://excited-earwig-40.hasura.app/v1/graphql",
+                "--dart-define=GRAPHQL_ENDPOINT=https://excited-earwig-40.hasura.app/v1/graphql"
             ]
         }
     ]

@@ -316,7 +316,7 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
                             FocusScope.of(context).unfocus();
                             if (_formKey.currentState!.validate()) {
                               final newValue = double.parse(
-                                  _amountController.text.replaceAll('\$', '').replaceAll('.', '').replaceAll(',', '.'));
+                                  _amountController.text.replaceAll('R\$', '').replaceAll('.', '').replaceAll(',', '.'));
 
                               final now = DateTime.now().millisecondsSinceEpoch;
 

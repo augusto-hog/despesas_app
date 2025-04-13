@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import '../../common/constants/constants.dart';
@@ -182,34 +183,47 @@ class SyncService {
   ///Performs server sync calls based on [SyncStatus].
   Future<void> _syncLocalTransactionsToServer(TransactionModel localTransaction) async {
     log('_syncLocalTransactionsToServer called', name: 'INFO');
+
     try {
-      var response = {};
+      Map<String, dynamic> payload = localTransaction.toMap();
+      Map<String, dynamic> response = {};
 
       switch (localTransaction.syncStatus) {
         case SyncStatus.create:
+          log('[SYNC] 📤 Payload para Create: $payload', name: 'SYNC');
           response = await graphQLService.create(
             path: Mutations.mAddNewTransaction,
-            params: localTransaction.toMap(),
+            params: payload,
           );
+          log('[SYNC] 📤 Payload CREATE enviado para Hasura: ${jsonEncode(payload)}', name: 'SYNC');
           break;
+
         case SyncStatus.update:
-          final transactionWithoutUserId = localTransaction.toMap();
+          final transactionWithoutUserId = Map<String, dynamic>.from(localTransaction.toMap());
           transactionWithoutUserId.removeWhere((key, value) => key == 'user_id');
 
+          log('[SYNC] 📝 Payload para Update: $transactionWithoutUserId', name: 'SYNC');
           response = await graphQLService.update(
             path: Mutations.mUpdateTransaction,
             params: transactionWithoutUserId,
           );
+          log('[SYNC] 📤 Payload UPDATE enviado para Hasura: ${jsonEncode(transactionWithoutUserId)}', name: 'SYNC');
           break;
+
         case SyncStatus.delete:
-          response =
-              await graphQLService.delete(path: Mutations.mDeleteTransaction, params: {'id': localTransaction.id});
+          log('[SYNC] ❌ Payload para Delete: ${localTransaction.id}', name: 'SYNC');
+          response = await graphQLService.delete(
+            path: Mutations.mDeleteTransaction,
+            params: {'id': localTransaction.id},
+          );
           break;
+
         default:
-          response = response;
+          response = {};
       }
 
       if (response.isEmpty) {
+        log('[SYNC] ❌ Resposta vazia do Hasura. Algo deu errado!', name: 'ERROR');
         throw const SyncException(code: 'error');
       }
     } catch (e) {

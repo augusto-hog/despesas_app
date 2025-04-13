@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '../../common/constants/environment.dart';
@@ -15,9 +17,11 @@ class GraphQLService implements DataService<Map<String, dynamic>> {
   GraphQLClient get client => _client;
 
   Future<GraphQLService> init() async {
-    final HttpLink httpLink = HttpLink(
-      const Environment().graphqlEndpoint,
-    );
+    final endpoint = const Environment().graphqlEndpoint;
+
+    log('[GRAPHQL] 🧪 Endpoint carregado: $endpoint');
+
+    final HttpLink httpLink = HttpLink(endpoint);
 
     final AuthLink authLink = AuthLink(
       getToken: () async {
@@ -65,9 +69,15 @@ class GraphQLService implements DataService<Map<String, dynamic>> {
         'errors': result.exception?.graphqlErrors.map((e) => e.message).toList(),
       };
     } catch (e) {
-      // Esta função já converte para a exceção certa
+      log('[GRAPHQL] create() exception: $e', name: 'ERROR');
+
+      if (e is OperationException) {
+        log('[GRAPHQL] GraphQL errors: ${e.graphqlErrors}', name: 'ERROR');
+        log('[GRAPHQL] Link exception: ${e.linkException}', name: 'ERROR');
+      }
+
       _handleException(e);
-      rethrow; // ← deixe a exceção real continuar
+      return {};
     }
   }
 
@@ -98,6 +108,7 @@ class GraphQLService implements DataService<Map<String, dynamic>> {
 
   @override
   Future<Map<String, dynamic>> update({
+    
     required String path,
     Map<String, dynamic> params = const {},
   }) async {
@@ -160,10 +171,12 @@ bool _containsInvalidResult(QueryResult result) {
 
 void _handleException(dynamic e) {
   if (e is OperationException && e.linkException != null) {
+    log('[GRAPHQL] 💥 LinkException lançada: ${e.linkException}', name: 'ERROR');
     throw const ConnectionException(code: 'connection-error');
   }
 
   if (e is OperationException && e.graphqlErrors.isNotEmpty) {
+    log('[GRAPHQL] 🧩 GraphQL Error Code: ${e.graphqlErrors.first.extensions?['code']}', name: 'ERROR');
     throw APIException(
       code: 0,
       textCode: e.graphqlErrors.first.extensions?['code'],

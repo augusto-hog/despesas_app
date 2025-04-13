@@ -39,7 +39,7 @@ class TransactionModel {
     return <String, dynamic>{
       'description': description,
       'category': category,
-      'value': value,
+      'value': value.toString(),
       'date': DateTime.fromMillisecondsSinceEpoch(date).toIso8601String(),
       'created_at': DateTime.fromMillisecondsSinceEpoch(createdAt).toIso8601String(),
       'status': status,

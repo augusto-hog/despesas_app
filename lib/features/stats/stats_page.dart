@@ -216,15 +216,24 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'Top Transações',
+                        'Transações',
                         style: AppTextStyles.mediumText18,
                       ),
-                      GestureDetector(
-                        onTap: _statsController.sortTransactions,
-                        child: const Icon(
-                          Icons.sort,
-                          color: AppColors.green,
-                        ),
+                      Row(
+                        children: [
+                          const Text(
+                            'Ordenar',
+                            style: AppTextStyles.smallText13, // Ajuste o estilo conforme necessário
+                          ),
+                          const SizedBox(width: 8.0), // Espaçamento entre o texto e o ícone
+                          GestureDetector(
+                            onTap: _statsController.sortTransactions,
+                            child: const Icon(
+                              Icons.sort,
+                              color: AppColors.green,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

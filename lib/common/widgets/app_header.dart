@@ -44,7 +44,7 @@ class _AppHeaderState extends State<AppHeader> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             GreetingsWidget(),
-            NotificationWidget(),
+            // NotificationWidget(),
           ],
         );
 

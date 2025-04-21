@@ -32,7 +32,7 @@ class GreetingsWidget extends StatelessWidget {
         Text(
           _greeting,
           textScaleFactor: textScaleFactor,
-          style: AppTextStyles.smallText.apply(color: AppColors.white),
+          style: AppTextStyles.mediumText20.apply(color: AppColors.white),
         ),
         Text(
           (locator.get<HomeController>().userData.name ?? '').capitalize().firstWord,

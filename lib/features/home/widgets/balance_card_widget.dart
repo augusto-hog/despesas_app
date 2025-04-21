@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
@@ -91,22 +90,6 @@ class _BalanceCardWidgetState extends State<BalanceCardWidget> {
                           );
                         })
                   ],
-                ),
-                GestureDetector(
-                  onTap: () => log('options'),
-                  child: PopupMenuButton(
-                    padding: EdgeInsets.zero,
-                    child: const Icon(
-                      Icons.more_horiz,
-                      color: AppColors.white,
-                    ),
-                    itemBuilder: (context) => [
-                      const PopupMenuItem(
-                        height: 24.0,
-                        child: Text("Item 1"),
-                      ),
-                    ],
-                  ),
                 ),
               ],
             ),

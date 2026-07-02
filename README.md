@@ -278,7 +278,7 @@ Graduado em **Sistemas de Informação** pela **Universidade Estadual de Goiás 
 
 GitHub: https://github.com/augusto-hog
 
-LinkedIn: *(adicione seu perfil aqui, se desejar)*
+LinkedIn: https://www.linkedin.com/in/augusto-henrique-oliveira-gomes1501
 
 ---
 
